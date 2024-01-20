@@ -1,5 +1,5 @@
 import Image from "next/image";
-import styles from "./page.module.css";
+import { Separator } from "@/components/ui/separator";
 import VideoUploader from "@/components/Video";
 import {
   Card,
@@ -10,13 +10,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 export default function Home() {
-
-
-
   return (
     <main className="px-[10vw]">
       <VideoUploader />
-      <div className="text-3xl ">hello</div>
+      <div className="py-6">
+        <h2 className="text-2xl font-semibold">Your Friends</h2>
+        <Separator className="bg-primary" />
+      </div>
       <div className="grid justify-center grid-cols-2 gap-3">
         <Card>
           <CardHeader>
@@ -37,7 +37,7 @@ export default function Home() {
             <Image src="/calvin.png" width="100" height="100" />
           </CardContent>
           <CardFooter></CardFooter>
-        </Card>{" "}
+        </Card>
         <Card>
           <CardHeader>
             <CardTitle>Kelvin Wong</CardTitle>

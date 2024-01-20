@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import VideoUploader from "@/components/Video";
+import Landing from "@/components/landing";
 import {
   Card,
   CardContent,
@@ -15,6 +16,7 @@ export default function Home() {
   return (
     <main className="px-[10vw]">
       <div id="video" class="min-h-[94vh]">
+        <Landing/>
         <VideoUploader />
       </div>
       <ArrowDown />

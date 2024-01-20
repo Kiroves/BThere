@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from 'react';
-import 'tailwindcss/tailwind.css';
-
+import Video from "@/styles/Video.css"
 const VideoUploader = () => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [progress, setProgress] = useState(0);
@@ -10,7 +9,7 @@ const VideoUploader = () => {
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         setSelectedFile(file);
-        setSourceKey((prevKey) => prevKey + 1); // Increment the key to force a re-render
+        setSourceKey((prevKey) => prevKey + 1);
 
         const reader = new FileReader();
 
@@ -22,10 +21,20 @@ const VideoUploader = () => {
         };
 
         reader.onload = (e) => {
-            setProgress(100); // Set progress to 100% when loading is complete
+            setProgress(100);
         };
 
         reader.readAsDataURL(file);
+    };
+
+    const handleVideoTouch = () => {
+        const video = document.getElementById('video');
+        if (video.paused) {
+            video.play();
+        } else {
+            video.pause();
+        }
+        console.log("touched");
     };
 
     return (
@@ -34,7 +43,7 @@ const VideoUploader = () => {
                 id="file-input"
                 type="file"
                 accept="video/*"
-                className="mb-4"
+                className="p-2 mb-2 lg:mr-2"
                 onChange={handleFileChange}
             />
 
@@ -42,11 +51,12 @@ const VideoUploader = () => {
                 <div>
                     <video
                         id="video"
-                        key={sourceKey} // Change the key to force re-render when a new file is selected
-                        width="300"
-                        height="300"
+                        key={sourceKey}
+                        width="100%"
+                        height="auto"
                         controls
                         className="border-2 border-black block mb-4"
+                        onTouchStart={handleVideoTouch}
                     >
                         <source src={URL.createObjectURL(selectedFile)} type={selectedFile.type} />
                     </video>

@@ -1,10 +1,10 @@
 import Image from "next/image";
 import styles from "./page.module.css";
-import Header from "@/components/header";
+import VideoUploader from "@/components/Video";
 export default function Home() {
   return (
     <main>
-      <Header />
+      <VideoUploader/>
       <div className="text-3xl ">hello</div>
     </main>
   );

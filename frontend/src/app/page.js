@@ -15,7 +15,7 @@ import ArrowDown from "@/components/ArrowDown";
 export default function Home() {
   return (
     <main className="px-[10vw]">
-      <div id="video" class="min-h-[94vh]">
+      <div id="video" class="flex justify-center items-center min-h-[100vh]">
         <Landing/>
         <VideoUploader />
       </div>

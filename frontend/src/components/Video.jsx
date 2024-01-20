@@ -1,14 +1,16 @@
 "use client";
-
 import React, { useState } from 'react';
+import 'tailwindcss/tailwind.css';
 
 const VideoUploader = () => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [progress, setProgress] = useState(0);
+    const [sourceKey, setSourceKey] = useState(0);
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         setSelectedFile(file);
+        setSourceKey((prevKey) => prevKey + 1); // Increment the key to force a re-render
 
         const reader = new FileReader();
 
@@ -40,12 +42,13 @@ const VideoUploader = () => {
                 <div>
                     <video
                         id="video"
+                        key={sourceKey} // Change the key to force re-render when a new file is selected
                         width="300"
                         height="300"
                         controls
                         className="border-2 border-black block mb-4"
                     >
-                        <source src={URL.createObjectURL(selectedFile)} type="video/*" />
+                        <source src={URL.createObjectURL(selectedFile)} type={selectedFile.type} />
                     </video>
 
                     <div className="relative pt-1">

@@ -43,7 +43,7 @@ const VideoUploader = () => {
                 id="file-input"
                 type="file"
                 accept="video/*"
-                className="p-2 mb-2 lg:mr-2"
+                className="p-2 mb-2 lg:w-500 m:w-300 s:w-200 xs:w-100"
                 onChange={handleFileChange}
             />
 

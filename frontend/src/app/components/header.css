@@ -1,0 +1,127 @@
+.Navbar {
+    display: flex;
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 5;
+    transition: transform 0.3s ease-in-out;
+}
+
+.Navbar.visible {
+    transform: translateY(0);
+}
+
+.Navbar.hidden {
+    transform: translateY(-100%);
+}
+
+.Navbar--inner {
+    color: black;
+    font-family: sans-serif;
+}
+
+.Navbar--inner>a {
+    text-decoration: none;
+    color: black;
+}
+
+.Navbar--outer {
+    display: flex;
+    gap: 3em;
+    margin-right: 10px
+}
+
+
+.Navbar--outer>* {
+    color: black;
+}
+
+.navbar-links {
+    font-size: 25px;
+    text-decoration: none;
+    padding: 10px 15px;
+    margin: 10px;
+    transition: all 0.5s;
+    color: black;
+    border-radius: 25px;
+}
+
+.navbar-links:hover {
+    background-color: white;
+    color: black;
+    transform: scale(1.05);
+}
+
+.Navbar--inner>a:hover {
+    color: black;
+}
+
+.resume {
+    margin-right: 30px;
+}
+
+@media (max-width: 900px) {
+    .navbar-links {
+        font-size: 20px;
+        padding: 5px 7px;
+        margin: 10px;
+        border-radius: 12px;
+    }
+
+    .Navbar--outer {
+        gap: 1em;
+        margin-right: 10px
+    }
+}
+
+@media (max-width: 600px) {
+    .navbar-links {
+        font-size: 15px;
+        padding: 1px 2px;
+        margin: 10px;
+        border-radius: 7px;
+    }
+
+    .Navbar--outer {
+        gap: 1em;
+        margin-right: 10px;
+    }
+}
+
+@media (max-width: 450px) {
+    .navbar-links {
+        font-size: 15px;
+        padding: 1px 2px;
+        margin: 10px;
+        border-radius: 7px;
+    }
+
+    .Navbar--outer {
+        gap: 0em;
+        margin-right: 10px;
+    }
+
+}
+
+@media (max-width: 400px) {
+    .navbar-links {
+        font-size: 12px;
+        padding: 1px 2px;
+        margin: 10px;
+        border-radius: 7px;
+    }
+}
+
+@media (max-width: 350px) {
+    .navbar-links {
+        font-size: 7px;
+        padding: 1px 2px;
+        margin: 5px;
+        border-radius: 7px;
+    }
+
+    .Navbar--outer {
+        margin-right: 10px
+    }
+}

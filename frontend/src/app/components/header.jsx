@@ -1,7 +1,7 @@
 'use client'
 import {useState, useEffect}from 'react'
-import './Navbar.css'
-const Navbar = () => {
+import './header.css'
+const Header = () => {
     const [prevScrollPos, setPrevScrollPos] = useState(0);
     const [visible, setVisible] = useState(true);
 
@@ -40,4 +40,4 @@ const Navbar = () => {
   )
 }
 
-export default Navbar
+export default Header

@@ -4,3 +4,6 @@ firebase-admin-config.json
 firebase-config.json
 __pycache__/
 .venv
+temp_images/
+transcript.wav
+compare.png

@@ -2,6 +2,9 @@ from google.cloud import vision
 client = vision.ImageAnnotatorClient()
 
 def detect_faces_path(path) -> str:
+    if path == "":
+        return ""
+
     """Detects faces in an image."""
     with open(path, "rb") as image_file:
         content = image_file.read()

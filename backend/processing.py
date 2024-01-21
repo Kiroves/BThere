@@ -38,12 +38,26 @@ def get_mood_from_emotions(emotion_string):
 
     # Create a dictionary to store emotion-value pairs
     emotions = {}
+    likelihood_name = {
+        "UNKNOWN": 0,
+        "VERY_UNLIKELY": 1,
+        "UNLIKELY": 2,
+        "POSSIBLE": 3,
+        "LIKELY": 4,
+        "VERY_LIKELY": 5,
+    }
     for pair in pairs:
         emotion, value = pair.split(':')
-        emotions[emotion.strip()] = int(value)
+        
+        print(emotion,value)
+        emotions[emotion.strip()] = likelihood_name[value.strip()]
 
     # Find the emotion with the highest value
     max_emotion = max(emotions, key=emotions.get)
+    # if all equal then return neutral
+    if emotions[max_emotion] < 3:
+        max_emotion = "neutral"
+    print(max_emotion)
     return max_emotion
 
 
@@ -97,21 +111,22 @@ if __name__ == "__main__":
     import flask
     from flask_cors import CORS
     
-    app = Flask(__name__)
-    CORS(app)
-    load_dotenv()
-    cred_obj = firebase_admin.credentials.Certificate(
-        os.environ.get("FIREBASE_ADMIN_CREDENTIALS")
-    )
+    # app = Flask(__name__)
+    # CORS(app)
+    # load_dotenv()
+    # cred_obj = firebase_admin.credentials.Certificate(
+    #     os.environ.get("FIREBASE_ADMIN_CREDENTIALS")
+    # )
 
-    default_app = firebase_admin.initialize_app(
-        cred_obj,
-        {
-            'storageBucket': os.environ.get('FIREBASE_STORAGE_BUCKET')
-        }
-    )
+    # default_app = firebase_admin.initialize_app(
+    #     cred_obj,
+    #     {
+    #         'storageBucket': os.environ.get('FIREBASE_STORAGE_BUCKET')
+    #     }
+    # )
 
-    db = firestore.client()
+    # db = firestore.client()
 
-    video_filename = os.path.join(os.path.dirname(__file__), "files", "vid_01.webm")
-    post_process(video_filename, "divy07ubc@gmail.com", db, False, "some-friend")
+    # video_filename = os.path.join(os.path.dirname(__file__), "files", "vid_01.webm")
+    # post_process(video_filename, "divy07ubc@gmail.com", db, False, "some-friend")
+    

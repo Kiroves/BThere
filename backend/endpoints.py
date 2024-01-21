@@ -68,7 +68,10 @@ def hello_world():
 @app.route("/add_new_friend", methods=["POST"])
 def add_new_friend():
     if (flask.request.args.get("name") == ""):
-        return flask.jsonify({"success": False, "error": "name cannot be empty"})
+        video_url = flask.request.args.get("video")
+        print("downloaded")
+        post_process(video_url, flask.request.args.get("email"), db, True, None)
+        return flask.jsonify({"success": True})
     user_ref = db.collection(flask.request.args.get("email"))
     user_id = str(flask.request.args.get("name")) + "-" + time.strftime("%Y%m%d-%H%M%S") # generate random id
     user_data = {}
@@ -181,6 +184,13 @@ def get_video_interval():
     except Exception as e:
         print(f"Error handling video chunk: {e}")
         return flask.jsonify({"success": False, "error": str(e)})
+
+
+@socketio.on("videoComplete")
+def handle_video_complete(data):
+    print("Processing video...")
+    print(data)
+    post_process(video_filename, data, db, True, None)
 
 
 @socketio.on("videoChunk")

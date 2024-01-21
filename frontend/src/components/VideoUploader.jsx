@@ -1,11 +1,15 @@
 "use client";
 import React, { useState } from "react";
-import Video from "@/styles/Video.css";
-const VideoUploader = () => {
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [progress, setProgress] = useState(0);
-  const [sourceKey, setSourceKey] = useState(0);
-
+import { Icon } from "@iconify/react";
+import { Button } from "@/components/ui/button";
+const VideoUploader = ({
+  selectedFile,
+  setSelectedFile,
+  setSourceKey,
+  disabled,
+  progress,
+  setProgress,
+}) => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setSelectedFile(file);
@@ -27,38 +31,26 @@ const VideoUploader = () => {
     reader.readAsDataURL(file);
   };
 
-  const handleVideoTouch = () => {
-    const video = document.getElementById("video");
-    if (video.paused) {
-      video.play();
-    } else {
-      video.pause();
-    }
-  };
-
   return (
-    <div className="container flex justify-center mt-8 p-4">
-      <input
-        id="file-input"
-        type="file"
-        accept="video/*"
-        className="p-2 mb-2 lg:w-500 m:w-300 s:w-200 xs:w-100"
-        onChange={handleFileChange}
-      />
+    <div className="self-center">
+      <div className="flex flex-row">
+        <Button className="hover:cursor pb-1" disabled={disabled}>
+          <input
+            id="file-input"
+            type="file"
+            accept="video/*"
+            className="hidden"
+            onChange={handleFileChange}
+          />
+          <label htmlFor="file-input" className="hover:cursor-pointer">
+            Upload Video
+          </label>
+        </Button>
+      </div>
 
-      {selectedFile && (
+      {/* progress bar */}
+      {selectedFile && progress !== 0 && (
         <div>
-          <video
-            id="video"
-            key={sourceKey}
-            width="100%"
-            height="auto"
-            controls
-            className="border-2 border-black block mb-4"
-            onTouchStart={handleVideoTouch}>
-            <source src={URL.createObjectURL(selectedFile)} type={selectedFile.type} />
-          </video>
-
           <div className="relative pt-1">
             <div className="flex mb-2 items-center justify-between">
               <div>

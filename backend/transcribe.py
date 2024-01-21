@@ -2,11 +2,13 @@ import speech_recognition as sr
 from os import path
 from pydub import AudioSegment
 from moviepy.editor import VideoFileClip
+import time
 
 # convert audio file to wav 
 
 def transc(filename) -> str:
-    
+    """Given a video file, transcribes the audio and returns the transcript"""
+
     # convert audio                                
     # sound = AudioSegment.from_file(file = filename)
     # sound.export("transcript.wav", format="wav")
@@ -20,7 +22,7 @@ def transc(filename) -> str:
     video_clip.close()
 
     # transcribe audio file                                                         
-    AUDIO_FILE = "transcript.wav"
+    AUDIO_FILE = "transcript" + time.strftime("%Y%m%d-%H%M%S") + ".wav"
  
     # use the audio file as the audio source                                        
     r = sr.Recognizer()

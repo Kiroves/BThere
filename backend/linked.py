@@ -26,7 +26,7 @@ audiopath = change_path_separator(audiopath)
 emotions = faces.detect_faces_path(imagepath)
 convo = transcribe.transc(audiopath)
 
-res = chatgpt.suggestions(emotions, convo)
+rec = chatgpt.suggestions(emotions, convo)
 
 cred_obj = firebase_admin.credentials.Certificate(
     os.environ.get("FIREBASE_ADMIN_CREDENTIALS")
@@ -45,7 +45,7 @@ email = ""
 
 user_id = recognition.match_face(imagepath, email)            # id found from image comparison or list of friends
 user_ref = db.collection(email)                               # email received from flask request
-user_ref.document(user_id).update({"rec": res})
+user_ref.document(user_id).update({"rec": rec})
 
 try:
     shutil.rmtree(temp_images)

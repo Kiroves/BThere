@@ -113,7 +113,7 @@ def end():
         final_compiled_video = b''.join(video_chunks)
 
         # Example: Save the final compiled video with a unique filename
-        final_video_filename = f"final_compiled_video_{time.strftime('%Y%m%d-%H%M%S')}.webm"
+        final_video_filename = "final_compiled_video.webm"
         with open(final_video_filename, "wb") as f:
             f.write(final_compiled_video)
 

@@ -1,8 +1,9 @@
 "use client";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
+import { useState } from "react";
 import VideoUploader from "@/components/Video";
-import Landing from "@/components/landing";
+import PublishingComponent from "@/components/live";
 import {
   Card,
   CardContent,
@@ -17,6 +18,11 @@ import ArrowDown from "@/components/ArrowDown";
 import TitleLogo from "../../public/png/logo-no-background.png";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 export default function Home() {
+  const [isLiveVisible, setLiveVisible] = useState(false);
+
+  const handleToggleLive = () => {
+    setLiveVisible(!isLiveVisible);
+  };
   return (
     <>
       <Navbar className="sticky" />
@@ -27,6 +33,13 @@ export default function Home() {
           </AspectRatio>
           <div id="video" className="flex justify-center items-center">
             <VideoUploader />
+            <div>
+              <button onClick={handleToggleLive}>
+                {isLiveVisible ? 'Turn Off Live' : 'Turn On Live'}
+              </button>
+
+              {isLiveVisible && <PublishingComponent />}
+            </div>
           </div>
         </div>
         <ArrowDown />

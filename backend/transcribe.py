@@ -3,8 +3,8 @@ from os import path
 from pydub import AudioSegment
 
 # convert audio file to wav 
-filename = ""                                          
-sound = AudioSegment.from_file(filename, format = filename.split(".")[-1])
+filename = ""                                       
+sound = AudioSegment.from_file(filename)
 sound.export("transcript.wav", format="wav")
 
 

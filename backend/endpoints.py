@@ -10,8 +10,10 @@ from flask import Flask
 from flask_socketio import SocketIO
 from flask import Flask, request
 from flask_cors import CORS
-from werkzeug.utils import secure_filename
-video_chunks = []
+import google.oauth2.id_token
+from google.auth.transport import requests
+
+
 video_filename = None
 app = Flask(__name__)
 CORS(app)
@@ -33,6 +35,19 @@ db = firestore.client()
 # blob = bucket.blob("test.jpg")
 # blob.upload_from_filename("test.jpg")
 # blob.make_public()
+
+firebase_request_adapter = requests.Request()
+
+
+def verify_tocken(token):
+    if token:
+        try:
+            claims = google.oauth2.id_token.verify_firebase_token(
+                token, firebase_request_adapter
+            )
+            return claims
+        except ValueError as exc:
+            return {"error": str(exc)}
 
 
 @app.route("/api/hello_world", methods=["GET"])
@@ -56,7 +71,7 @@ def add_new_friend():
     event_id = "event " + time.strftime("%Y%m%d-%H%M%S") # generate random id
     event_data = {}
     event_data["title_summary"] = "title summary"               # TODO
-    event_data["transcript_summery"] = "transcript summary"     # TODO
+    event_data["transcript_summary"] = "transcript summary"     # TODO
     event_data["date"] = int(time.time())
     event_data["overall_mood"] = "overall mood"                 # TODO
     events_ref.document(event_id).set(event_data)
@@ -72,6 +87,8 @@ def delete_friend():
 
 @app.route("/get_all_friends", methods=["GET"])
 def get_all_friends():
+    # if not verify_tocken(flask.request.args.get("token")):
+    #     return flask.jsonify({"success": False, "error": "invalid token"})
     ref = db.collection(flask.request.args.get("email"))
     friends = []
     for doc in ref.stream():
@@ -80,13 +97,12 @@ def get_all_friends():
     return flask.jsonify({"success": True, "friends": friends})
 
 
-# TODO: change to /friend/<id>
-@app.route("/get_friend_info", methods=["GET"])
-def get_friend_info():
+@app.route("/friend/<id>", methods=["GET"])
+def get_friend_info(id):
     ref = db.collection(flask.request.args.get("email"))
-    user_doc = ref.document(flask.request.args.get("id"))
+    user_doc = ref.document(id)
     events = []
-    for event_doc in ref.document(flask.request.args.get("id")).collection("events").stream():
+    for event_doc in user_doc.collection("events").stream():
         events.append(event_doc.to_dict())
     return flask.jsonify({'success': True, 'friend': user_doc.get().to_dict(), 'events': events})
 
@@ -107,9 +123,6 @@ def start():
         video_filename = f"compiled_video_{random.randint(1000, 9999)}.webm"
         with open(video_filename, "wb") as f:
             f.write(b"")  # Create the file
-
-        # Clear the global variable storing video chunks
-        video_chunks.clear()
 
     except Exception as e:
         print(f"Error during setup: {e}")

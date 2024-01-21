@@ -6,8 +6,8 @@ from dotenv import load_dotenv
 import flask
 import firebase_admin
 from firebase_admin import firestore
-from flask import Flask, render_template
 from flask_socketio import SocketIO
+from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -138,13 +138,6 @@ def get_video_interval():
     except Exception as e:
         print(f'Error handling video chunk: {e}')
         return flask.jsonify({'success': False, 'error': str(e)})
-
-@app.route('/get_video_interval', methods=['POST'])
-def get_video_interval():
-    # TODO: get blob
-    # turn into video/audio
-    # merge with previous one
-    # send to GPT
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)

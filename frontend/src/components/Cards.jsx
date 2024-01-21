@@ -13,8 +13,9 @@ import {
 } from "@/components/ui/dialog";
 
 import Friends from "@/app/friend/[id]/page";
+import YSkel from "./YSkel";
 
-export default function Cards({ token, email }) {
+export default function Cards({ token, email, refresh }) {
   // friends
   const [cards, setCards] = useState([]);
 
@@ -64,20 +65,27 @@ export default function Cards({ token, email }) {
     if (token) {
       getAllFriends();
     }
-  }, [token]);
+  }, [token, refresh]);
 
   return (
     <>
+      {cards.length === 0 && (
+        <>
+          <YSkel />
+          <YSkel />
+        </>
+      )}
       {cards.map((card, idx) => {
         console.log(card.image);
         return (
-          // <Link key={card.id} href={`/friend/${card.id}`}>
-          <Dialog>
+          <Dialog key={card.id}>
             <DialogTrigger>
               <Card>
                 <CardHeader>
                   <CardTitle>{card.name}</CardTitle>
-                  <CardDescription>{card.description}</CardDescription>
+                  <CardDescription>
+                    <div className="text-left">{card.description}</div>
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <img src={card.image} width="100" height="100" />
@@ -95,8 +103,6 @@ export default function Cards({ token, email }) {
               </DialogHeader>
             </DialogContent>
           </Dialog>
-
-          // </Link>
         );
       })}
     </>

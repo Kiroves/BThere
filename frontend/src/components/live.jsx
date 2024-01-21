@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import io from "socket.io-client";
-const PublishingComponent = () => {
+const PublishingComponent = ({ email }) => {
   const [publishing, setPublishing] = useState(false);
-  const [websocketConnected, setWebsocketConnected] = useState(false);
   const localVideoRef = useRef(null);
   const peerConnectionRef = useRef(null);
   const mediaRecorderRef = useRef(null);
@@ -14,11 +13,15 @@ const PublishingComponent = () => {
   const socketRef = useRef(null);
 
   const handlePublish = async () => {
+    console.log(publishing, mediaRecorderRef.current);
     try {
       if (publishing) {
         // If already publishing, stop the recording
         clearInterval(intervalId);
+        mediaRecorderRef.current.stop();
         mediaRecorderRef.current = null;
+        socketRef.current.emit("videoComplete", email);
+        socketRef.current.disconnect();
         setPublishing(false);
         return;
       }
@@ -34,12 +37,6 @@ const PublishingComponent = () => {
 
       // Connect to Socket.IO server
       socketRef.current = io(socketIoUrl);
-      socketRef.current.on("connect", () => {
-        setWebsocketConnected(true);
-      });
-      socketRef.current.on("disconnect", () => {
-        setWebsocketConnected(false);
-      });
 
       setPublishing(true);
       mediaRecorderRef.current.start();
@@ -66,6 +63,7 @@ const PublishingComponent = () => {
   const handleDataAvailable = (event) => {
     if (event.data.size > 0) {
       recordedChunksRef.current.push(event.data);
+      console.log(event.data.size);
     }
   };
 
@@ -80,7 +78,6 @@ const PublishingComponent = () => {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
         localVideoRef.current.srcObject = stream;
-        setWebsocketConnected(true);
       } catch (error) {
         console.error("Error accessing media devices:", error);
       }

@@ -25,6 +25,7 @@ export default function Home() {
   // auth
   const [token, setToken] = useState(null);
   const [user, setUser] = useState("");
+  const [refresh, setRefresh] = useState(false);
   const [email, setEmail] = useState("");
 
   // update token state from cookie on browser start
@@ -95,8 +96,12 @@ export default function Home() {
 
                 <div id="video" />
                 {selectedFile && <VideoPreview sourceKey={sourceKey} selectedFile={selectedFile} />}
-                {isLiveVisible && <PublishingComponent />}
-                <AddFriend selectedFile={selectedFile} setProgress={setProgress} />
+                {isLiveVisible && <PublishingComponent email={email} />}
+                <AddFriend
+                  selectedFile={selectedFile}
+                  setProgress={setProgress}
+                  setRefresh={setRefresh}
+                />
               </div>
             </div>
             <ArrowDown />
@@ -106,7 +111,7 @@ export default function Home() {
                 <Separator className="bg-primary" />
               </div>
               <div className="grid justify-center grid-cols-2 gap-3">
-                <Cards token={token} email={email} />
+                <Cards token={token} email={email} refresh={refresh} />
               </div>
             </div>
           </>

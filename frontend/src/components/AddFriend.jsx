@@ -5,7 +5,7 @@ import { getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-const AddFriend = ({ selectedFile, setProgress }) => {
+const AddFriend = ({ selectedFile, setProgress, setRefresh }) => {
   const [friendName, setFriendName] = useState("");
 
   const handleNameChange = (e) => {
@@ -25,7 +25,9 @@ const AddFriend = ({ selectedFile, setProgress }) => {
 
     // submit video to firebase storage
     const storage = getStorage();
-    const storageRef = ref(storage, `videos/${email}/${friendName}`);
+    const arr = new Uint32Array(10);
+    crypto.getRandomValues(arr);
+    const storageRef = ref(storage, `videos/${email}/${friendName}${arr.toString()}`);
     const metadata = {
       contentType: "video/mp4",
     };
@@ -45,7 +47,7 @@ const AddFriend = ({ selectedFile, setProgress }) => {
       },
       async () => {
         // on success
-        const response = await fetch(
+        const response = fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/add_new_friend?email=${email}&name=${friendName}&video=${uploadTask.snapshot.ref.fullPath}`,
           {
             method: "POST",
@@ -54,10 +56,7 @@ const AddFriend = ({ selectedFile, setProgress }) => {
               Authorization: `Bearer ${token}`,
             },
           }
-        );
-
-        const json = await response.json();
-        console.log(json);
+        ).then(setRefresh((refresh) => !refresh));
       }
     );
   }

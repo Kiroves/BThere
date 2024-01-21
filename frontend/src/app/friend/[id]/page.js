@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getEmail, setStateEmail } from "@/app/page"; // email is user's email
 import { getDownloadURL, getStorage, ref } from "firebase/storage";
+import ProfilePlaceholder from "../../../../public/png/profile_placeholder.jpg";
 
 import {
   Accordion,
@@ -41,11 +42,14 @@ export default function Friends({ params }) {
         const json = await response.json();
         const events = json.events;
         const friendInfo = json.friend;
-
-        const storage = getStorage();
-        const fbRef = ref(storage, friendInfo.photo);
-        const imageURL = await getDownloadURL(fbRef);
-        setImgURL(imageURL); // Set imgURL state
+        if (!friendInfo.photo) {
+          setImgURL(ProfilePlaceholder.src); // Set imgURL state
+        } else {
+          const storage = getStorage();
+          const fbRef = ref(storage, friendInfo.photo);
+          const imageURL = await getDownloadURL(fbRef);
+          setImgURL(imageURL); // Set imgURL state
+        }
 
         const mappedEvents = events.map(async (event) => {
           return {

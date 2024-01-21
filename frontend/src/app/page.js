@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import VideoUploader from "@/components/VideoUploader";
 
@@ -27,6 +27,7 @@ export default function Home() {
   // auth
   const [token, setToken] = useState(null);
   const [user, setUser] = useState("");
+  const [email, setEmail] = useState("");
 
   console.log(user, token);
 
@@ -35,26 +36,51 @@ export default function Home() {
   const [sourceKey, setSourceKey] = useState(0);
   const [progress, setProgress] = useState(0);
 
-  const previewImages = [
-    {
-      name: "Kelvin Wong",
-      description: "I am happy!",
-      image: exampleImage,
-    },
-    {
-      name: "Kelvin Wong",
-      description: "I am happy!",
-      image: exampleImage,
-    },
-    {
-      name: "Kelvin Wong",
-      description: "I am happy!",
-      image: exampleImage,
-    },
-  ];
+  // friends
+  const [cards, setCards] = useState([]);
+
+  useEffect(() => {
+    const response = fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/hello_world`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  });
+
+  useEffect(() => {
+    async function getAllFriends() {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/get_all_friends?email=${email}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const json = await response.json();
+      console.log(json);
+      const friends = json.friends;
+      setCards(
+        friends.map((friend) => {
+          return {
+            name: friend.name,
+            description: friend.rec,
+            image: friend.photo, // url
+          };
+        })
+      );
+    }
+    if (token) {
+      getAllFriends();
+    }
+  }, [token]);
   return (
     <>
-      <Navbar className="sticky" setToken={setToken} setUser={setUser} />
+      <Navbar className="sticky" setToken={setToken} setUser={setUser} setEmail={setEmail} />
       <main className="px-[10vw] pt-[5vh]">
         <div id="home" className="flex flex-col items-center min-h-[100vh]">
           <div className="w-3/5">
@@ -63,37 +89,23 @@ export default function Home() {
             </AspectRatio>
           </div>
           <div id="video-section" className="flex flex-col justify-center items-center">
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button className="my-5" variant="outline">
-                  Upload Video
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-80">
-                <div className="grid gap-4 space-y-2">
-                  <div className="flex flex-row ">
-                    <VideoUploader
-                      selectedFile={selectedFile}
-                      setSelectedFile={setSelectedFile}
-                      setSourceKey={setSourceKey}
-                      disabled={isLiveVisible}
-                      progress={progress}
-                      setProgress={setProgress}
-                    />
-                    <Icon
-                      icon="material-symbols:close"
-                      inline={true}
-                      className="hover:cursor-pointer mt-[0.5em] justify-self-end"
-                      height={24}
-                      onClick={() => setSelectedFile(null)}
-                    />
-                  </div>
-                  <Button disabled={selectedFile} onClick={handleToggleLive}>
-                    {isLiveVisible ? "Turn off Live" : "Turn on Live"}
-                  </Button>
-                </div>
-              </PopoverContent>
-            </Popover>
+            <div className="mt-24 flex flex-row gap-20">
+              <VideoUploader
+                selectedFile={selectedFile}
+                setSelectedFile={setSelectedFile}
+                setSourceKey={setSourceKey}
+                disabled={isLiveVisible}
+                progress={progress}
+                setProgress={setProgress}
+              />
+              <Button
+                disabled={selectedFile}
+                onClick={handleToggleLive}
+                className="bg-primary hover:bg-primary">
+                {isLiveVisible ? "Turn off Live" : "Turn on Live"}
+              </Button>
+            </div>
+
             <div id="video" />
             {selectedFile && <VideoPreview sourceKey={sourceKey} selectedFile={selectedFile} />}
             {isLiveVisible && <PublishingComponent />}
@@ -106,7 +118,7 @@ export default function Home() {
             <Separator className="bg-primary" />
           </div>
           <div className="grid justify-center grid-cols-2 gap-3">
-            {previewImages.map((previewImages, idx) => {
+            {cards.map((previewImages, idx) => {
               return (
                 <PreviewCard
                   name={previewImages.name}

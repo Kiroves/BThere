@@ -34,7 +34,7 @@ const VideoUploader = ({
   return (
     <div className="self-center">
       <div className="flex flex-row">
-        <Button className="hover:cursor pb-1" disabled={disabled}>
+        <Button className="hover:cursor pb-1 bg-primary" disabled={disabled}>
           <input
             id="file-input"
             type="file"

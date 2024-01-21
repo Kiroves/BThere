@@ -63,9 +63,6 @@ const AddFriend = ({ selectedFile, setProgress, setRefresh }) => {
 
   return (
     <div>
-      <div>
-        First time meeting someone? Add their name to BThere and we'll remember their name and face!
-      </div>
       <form onSubmit={handleSubmit}>
         <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label htmlFor="name">Name</Label>

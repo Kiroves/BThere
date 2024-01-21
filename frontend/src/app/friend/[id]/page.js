@@ -101,8 +101,14 @@ export default function Friends({ params }) {
                       <div>{dateString}</div>
                     </AccordionTrigger>
                     <AccordionContent>
-                      <div>{card.overall_mood}</div>
-                      {card.transcript_summary}
+                      <div className="">
+                        <span className="font-bold">Overall Mood: </span>
+                        {card.overall_mood}
+                      </div>
+                      <div className="text-left">
+                        <span className="font-bold">Summary: </span>
+                        {card.transcript_summary}
+                      </div>
                     </AccordionContent>
                   </AccordionItem>
                 </Accordion>

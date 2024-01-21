@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 
 import VideoPreview from "@/components/VideoPreview";
 import Cards from "@/components/Cards";
+import AddFriend from "@/components/AddFriend";
 
 export default function Home() {
   const [isLiveVisible, setLiveVisible] = useState(false);
@@ -74,6 +75,7 @@ export default function Home() {
             <div id="video" />
             {selectedFile && <VideoPreview sourceKey={sourceKey} selectedFile={selectedFile} />}
             {isLiveVisible && <PublishingComponent />}
+            <AddFriend/>
           </div>
         </div>
         <ArrowDown />

@@ -2,6 +2,7 @@ from google.cloud import vision
 client = vision.ImageAnnotatorClient()
 
 def detect_faces_path(path) -> str:
+    """Given an image path, returns a string of the emotions of the face in the image"""
     if path == "":
         return ""
 
@@ -59,4 +60,5 @@ def detect_faces(content) -> str:
     surprise = likelihood_name[the_face.surprise_likelihood]
     sorrow = likelihood_name[the_face.sorrow_likelihood]
     res = "anger: {}, joy: {}, surprise: {}, sorrow: {}".format(anger, joy, surprise, sorrow)
+    print(res)
     return res

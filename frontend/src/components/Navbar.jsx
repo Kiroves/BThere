@@ -14,21 +14,35 @@ import { Separator } from "@/components/ui/separator";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
+import { signOut } from "firebase/auth";
+import { useState } from "react";
 
-export default function Navbar({ setToken, setUser, setEmail }) {
+export default function Navbar({ setToken, setUser, setEmail, isAuthenticated, onSignIn, onSignOut }) {
   const handleGoogle = async (e) => {
-    const provider = new GoogleAuthProvider();
-    try {
-      const result = await signInWithPopup(auth, provider);
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential.accessToken;
-      window.localStorage.setItem("token", token);
-      setToken(token);
-      console.log(result);
-      setUser(result.user.displayName);
-      setEmail(result.user.email);
-    } catch (error) {}
-  };
+      const provider = new GoogleAuthProvider();
+      try {
+        const result = await signInWithPopup(auth, provider);
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+
+        // Call the provided callback from props
+        onSignIn(result.user);
+
+        console.log(result);
+      } catch (error) {
+        console.error("Google sign-in error:", error);
+      }
+    };
+
+    const handleSignOut = async () => {
+      try {
+        await signOut(auth);
+
+        // Call the provided callback from props
+        onSignOut();
+      } catch (error) {
+        console.error("Sign out error:", error);
+      }
+    };
   return (
     <>
       <NavigationMenu>
@@ -47,9 +61,16 @@ export default function Navbar({ setToken, setUser, setEmail }) {
           </NavigationMenuItem>
           <div className="flex-grow" />
           <NavigationMenuItem>
-            <Button onClick={handleGoogle} variant="ghost" className="">
-              Sign in with Google
-            </Button>
+            {/* Conditionally render "Sign in with Google" or "Sign out" button */}
+            {isAuthenticated ? (
+              <Button onClick={handleSignOut} variant="ghost" className="">
+                Sign Out
+              </Button>
+            ) : (
+              <Button onClick={handleGoogle} variant="ghost" className="">
+                Sign in with Google
+              </Button>
+            )}
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>

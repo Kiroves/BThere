@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import io from 'socket.io-client';
-
 const PublishingComponent = () => {
     const [publishing, setPublishing] = useState(false);
     const [websocketConnected, setWebsocketConnected] = useState(false);

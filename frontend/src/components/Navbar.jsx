@@ -11,12 +11,19 @@ import {
 import Link from "next/link";
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
 import { Separator } from "@/components/ui/separator";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth } from "@/lib/firebase";
+import { Button } from "@/components/ui/button";
 
 export default function Navbar() {
+  const handleGoogle = async (e) => {
+    const provider = new GoogleAuthProvider();
+    return signInWithPopup(auth, provider);
+  };
   return (
     <>
       <NavigationMenu>
-        <NavigationMenuList>
+        <NavigationMenuList className="flex">
           <NavigationMenuItem>
             <Link href="/#home" legacyBehavior passHref>
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>Home</NavigationMenuLink>
@@ -28,6 +35,12 @@ export default function Navbar() {
                 Friends
               </NavigationMenuLink>
             </Link>
+          </NavigationMenuItem>
+          <div className="flex-grow" />
+          <NavigationMenuItem>
+            <Button onClick={handleGoogle} variant="ghost" className="">
+              Sign in with Google
+            </Button>
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>

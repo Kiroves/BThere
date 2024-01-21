@@ -34,7 +34,6 @@ const VideoUploader = () => {
     } else {
       video.pause();
     }
-    console.log("touched");
   };
 
   return (

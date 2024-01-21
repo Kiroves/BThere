@@ -20,6 +20,7 @@ export default function Home() {
   const handleToggleLive = () => {
     setLiveVisible(!isLiveVisible);
   };
+
   // auth
   const [token, setToken] = useState(null);
   const [user, setUser] = useState("");
@@ -37,11 +38,18 @@ export default function Home() {
         <div id="home" className="flex flex-col items-center min-h-[100vh]">
           <div className="w-3/5">
             <AspectRatio id="logo" ratio={1500 / 500} className="flex justify-center object-cover">
-              <Image src={TitleLogo} fill={true} className="" alt="Title Logo" placeholder="blur" />
+              <Image
+                src={TitleLogo}
+                fill={true}
+                className=""
+                alt="Title Logo"
+                placeholder="blur"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              />
             </AspectRatio>
           </div>
           <div id="video-section" className="flex flex-col justify-center items-center">
-            <div className="mt-24 flex flex-row gap-20">
+            <div className="mt-24 flex flex-row gap-20 mb-4">
               <VideoUploader
                 selectedFile={selectedFile}
                 setSelectedFile={setSelectedFile}
@@ -52,8 +60,10 @@ export default function Home() {
               />
               <Button
                 disabled={selectedFile}
-                onClick={handleToggleLive}
-                className="bg-primary hover:bg-primary">
+                onClick={() => {
+                  handleToggleLive();
+                }}
+                className="bg-primary hover:bg-primary text-black">
                 {isLiveVisible ? "Turn off Live" : "Turn on Live"}
               </Button>
             </div>

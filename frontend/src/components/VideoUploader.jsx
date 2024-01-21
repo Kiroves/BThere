@@ -31,21 +31,40 @@ const VideoUploader = ({
     reader.readAsDataURL(file);
   };
 
+  const handleRemoveFile = () => {
+    if (!selectedFile) {
+      return;
+    }
+    setSelectedFile(null);
+    setProgress(0);
+  };
+
   return (
     <div className="self-center">
       <div className="flex flex-row">
-        <Button className="hover:cursor pb-1 bg-primary" disabled={disabled}>
-          <input
-            id="file-input"
-            type="file"
-            accept="video/*"
-            className="hidden"
-            onChange={handleFileChange}
-          />
-          <label htmlFor="file-input" className="hover:cursor-pointer">
-            Upload Video
-          </label>
-        </Button>
+        {selectedFile ? (
+          <Button
+            className="hover:cursor pb-1 bg-primary text-black hover:bg-primary"
+            onClick={handleRemoveFile}
+            disabled={disabled}>
+            Remove Video
+          </Button>
+        ) : (
+          <Button
+            className="hover:cursor pb-1 text-black bg-primary hover:bg-primary"
+            disabled={disabled}>
+            <input
+              id="file-input"
+              type="file"
+              accept="video/*"
+              className="hidden"
+              onChange={handleFileChange}
+            />
+            <label htmlFor="file-input" className="hover:cursor-pointer">
+              Upload Video
+            </label>
+          </Button>
+        )}
       </div>
 
       {/* progress bar */}

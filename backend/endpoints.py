@@ -5,8 +5,8 @@ import json
 from dotenv import load_dotenv
 import flask
 import firebase_admin
-from firebase_admin import firestore
-from flask import Flask, render_template
+from firebase_admin import firestore, storage
+from flask import Flask
 from flask_socketio import SocketIO
 from flask_cors import CORS
 
@@ -35,19 +35,19 @@ def add_new_friend():
     user_data = {}
     user_data["id"] = user_id
     user_data["name"] = flask.request.args.get('name')
-    user_data["photo"] = "bthere-fb381.appspot.com/test.jpg"
+    user_data["photo"] = "test.jpg" # TODO: set from API
     user_data["rec"] = None  # TODO: set from API
-    user_data["last_update"] = time.time()
-    user_ref.document(id).set(user_data)
-    # # add events
-    # events_ref = user_ref.document(id).collection("events")
-    # event_id = "event " + time.strftime("%Y%m%d-%H%M%S") # generate random id
-    # event_data = {}
-    # event_data["title_summary"] = None  # TODO
-    # event_data["transcript_summery"] = None  # TODO
-    # event_data["date"] = time.time()
-    # event_data["overall_mood"] = None  # TODO
-    # events_ref.document(event_id).set(event_data)
+    user_data["last_update"] = int(time.time())
+    user_ref.document(user_id).set(user_data)
+    # add events
+    events_ref = user_ref.document(user_id).collection("events")
+    event_id = "event " + time.strftime("%Y%m%d-%H%M%S") # generate random id
+    event_data = {}
+    event_data["title_summary"] = None  # TODO
+    event_data["transcript_summery"] = None  # TODO
+    event_data["date"] = int(time.time())
+    event_data["overall_mood"] = None  # TODO
+    events_ref.document(event_id).set(event_data)
     return flask.jsonify({"success": True})
 
 

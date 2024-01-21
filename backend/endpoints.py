@@ -9,7 +9,9 @@ from firebase_admin import firestore
 from flask_socketio import SocketIO
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
-
+from werkzeug.utils import secure_filename
+video_chunks = []
+video_filename = None
 app = Flask(__name__)
 CORS(app)
 socketio = SocketIO(app, cors_allowed_origins="*")
@@ -84,6 +86,7 @@ def handle_connect():
 @socketio.on("disconnect")
 def handle_disconnect():
     print("Client disconnected")
+    end()
 
 
 @socketio.on("videoChunk")
@@ -139,7 +142,26 @@ def process_video_chunk(blob):
 
     # After processing, you can send the result to GPT or perform any other actions
 
+def handle_video_chunk(data):
+    try:
+        global video_filename
 
+        # Process the received video chunk
+        print(f"Received video chunk with size: {len(data)} bytes")
+
+        # Append the chunk to the global list
+        video_chunks.append(data)
+
+        if not video_filename:
+            # Start a new video recording
+            video_filename = f"compiled_video_{time.strftime('%Y%m%d-%H%M%S')}.webm"
+
+        # Save the compiled video
+        with open(video_filename, "ab") as f:
+            f.write(data)
+
+    except Exception as e:
+        print(f"Error processing video chunk: {e}")
 @app.route("/get_video_interval", methods=["POST"])
 def get_video_interval():
     try:

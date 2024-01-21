@@ -1,4 +1,4 @@
-import transcribe, chatgpt, capture, recognition
+import faces, transcribe, chatgpt, capture, recognition
 import firebase_admin
 from firebase_admin import firestore, storage
 from deepface import DeepFace
@@ -27,7 +27,8 @@ def choose_image(video_filename):
         tuple: (Path to image file, emotions)
     """
 
-    return capture.capture_frame(video_filename)
+    ret = capture.capture_frame(video_filename, "files")
+    return ret[0], ret[1]
 
 
 def get_mood_from_emotions(emotion_string):
@@ -46,14 +47,27 @@ def get_mood_from_emotions(emotion_string):
     return max_emotion
 
 
-def post_process(video_filename: str, email: str, db: firestore.client):
-    """Processes video file through all APIs and fills in the database"""
+def post_process(video_filename: str, email: str, db: firestore.client, match_face: bool, friend_id: str):
+    """Processes video file through all APIs and fills in the database
+    First time - match_face = False, friend_id = "somehting"
+    Second time - match_face = True, friend_id = None"""
+    
+    print("post_process called")
+    print("match_face: ", match_face)
+    print("friend_id: ", friend_id)
+    print("email: ", email)
+    print("video_filename: ", video_filename)
+    
     # call APIs
     video_filename = change_path_separator(video_filename)
     image_path, emotions = choose_image(video_filename)
+    print("image_path: ", image_path)
     convo = transcribe.transc(video_filename)
+    print("convo: ", convo)
     rec = chatgpt.suggestions(emotions, convo)
-    friend_id = recognition.match_face(image_path, email)
+    print("rec: ", rec)
+    if match_face:
+        friend_id = recognition.match_face(image_path, email)
     
     # update database
     user_ref = db.collection(email)
@@ -99,5 +113,5 @@ if __name__ == "__main__":
 
     db = firestore.client()
 
-    video_filename = os.path.join(os.path.dirname(__file__), "files", "test.mp4")
-    # post_process(video_filename, "divy07ubc@gmail.com", db)
+    video_filename = os.path.join(os.path.dirname(__file__), "files", "vid_01.webm")
+    post_process(video_filename, "divy07ubc@gmail.com", db, False, "some-friend")

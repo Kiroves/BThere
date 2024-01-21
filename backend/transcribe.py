@@ -16,21 +16,16 @@ def transc(filename) -> str:
     # convert video
     video_clip = VideoFileClip(filename)
     audio_clip = video_clip.audio
-    audio_clip.write_audiofile("transcript.wav", codec='pcm_s16le')
+    AUDIO_FILE = "transcript" + time.strftime("%Y%m%d-%H%M%S") + ".wav"
+    audio_clip.write_audiofile(AUDIO_FILE, codec='pcm_s16le')
 
     audio_clip.close()
     video_clip.close()
-
-    # transcribe audio file                                                         
-    AUDIO_FILE = "transcript" + time.strftime("%Y%m%d-%H%M%S") + ".wav"
  
     # use the audio file as the audio source                                        
     r = sr.Recognizer()
     with sr.AudioFile(AUDIO_FILE) as source:
         audio = r.record(source)  # read the entire audio file                  
-
-        # print("Transcription: " + r.recognize_google(audio))
-
         try:
             return r.recognize_google(audio)
         except Exception as e:

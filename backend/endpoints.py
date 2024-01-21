@@ -12,7 +12,7 @@ from flask import Flask, request
 from flask_cors import CORS
 import google.oauth2.id_token
 from google.auth.transport import requests
-# from processing import *
+from processing import *
 
 
 video_filename = None
@@ -28,14 +28,23 @@ cred_obj = firebase_admin.credentials.Certificate(
 default_app = firebase_admin.initialize_app(
     cred_obj,
     {
-        'storageBucket': os.environ.get('FIREBASE_STORAGE_BUCKET')
+        'storageBucket': os.environ.get('NEXT_PUBLIC_REACT_APP_FIREBASE_STORAGE_BUCKET')
     }
 )
 db = firestore.client()
+
+# upload file
 # bucket = storage.bucket()
 # blob = bucket.blob("test.jpg")
 # blob.upload_from_filename("test.jpg")
 # blob.make_public()
+
+
+# download file
+# bucket = storage.bucket()
+# blob = bucket.blob("test.jpg")
+# blob.download_to_filename("test_download.jpg")
+
 
 firebase_request_adapter = requests.Request()
 
@@ -70,10 +79,17 @@ def add_new_friend():
     user_data["last_update"] = int(time.time())
     user_ref.document(user_id).set(user_data)
     
-    video_filename = flask.request.args.get("video")
-    if video_filename:
-        print("post process")
-        # post_process(video_filename, flask.request.args.get("email"), db)
+    video_url = flask.request.args.get("video")
+    if video_url:
+        # download video
+        print("video url: ", video_url)
+        bucket = storage.bucket()
+        blob = bucket.blob(video_url)
+        file_name = "video-" + time.strftime("%Y%m%d-%H%M%S") + ".webm"
+        blob.download_to_filename(file_name)
+        
+        print("downloaded")
+        post_process(file_name, flask.request.args.get("email"), db, False, user_id)
     # # add events
     # events_ref = user_ref.document(user_id).collection("events")
     # event_id = "event " + time.strftime("%Y%m%d-%H%M%S") # generate random id

@@ -7,7 +7,6 @@ from PIL import Image
 def capture_frame(videopath, output_folder) -> str:
     """Given a video file, captures a frame with a face in it and returns the path to the image file"""
     cap = cv2.VideoCapture(videopath)
-    video_filename = os.path.basename(videopath)
 
     if not cap.isOpened():
         print("Error: Could not open video file.")
@@ -28,7 +27,7 @@ def capture_frame(videopath, output_folder) -> str:
         if not ret:
             break
 
-        if (frame_number % fps == 0) or (frame_number == 1):
+        if (frame_number % (fps/3) == 0) or (frame_number == 1):
             frame_path = os.path.join(output_folder, f"frame_{frame_number}.png")
             cv2.imwrite(frame_path, frame)
             emotions = faces.detect_faces_path(frame_path)

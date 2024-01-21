@@ -13,17 +13,5 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
-// Listen for authentication state changes
-auth.onAuthStateChanged((user) => {
-  if (user) {
-    // User is signed in, get the ID token
-    user.getIdToken().then((idToken) => {
-      // Store the ID token in local storage or cookie
-      localStorage.setItem('firebaseIdToken', idToken);
-    });
-  } else {
-    // User is signed out, clear the stored ID token
-    localStorage.removeItem('firebaseIdToken');
-  }
-});
+// Listen for authentication state change
 export default app;

@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import { signOut } from "firebase/auth";
 import { useState } from "react";
 
-export default function Navbar({ setToken, setUser, setEmail, toke}) {
+export default function Navbar({ setToken, setUser, setEmail, token }) {
   const handleGoogle = async (e) => {
     const provider = new GoogleAuthProvider();
     try {
@@ -35,7 +35,7 @@ export default function Navbar({ setToken, setUser, setEmail, toke}) {
     try {
       // Call the provided callback from props
       setToken(null);
-      toke = null;
+      window.localStorage.removeItem("token");
     } catch (error) {
       console.error("Sign out error:", error);
     }
@@ -59,7 +59,7 @@ export default function Navbar({ setToken, setUser, setEmail, toke}) {
           <div className="flex-grow" />
           <NavigationMenuItem>
             {/* Conditionally render "Sign in with Google" or "Sign out" button */}
-            {toke ? (
+            {token ? (
               <Button onClick={handleSignOut} variant="ghost" className="">
                 Sign Out
               </Button>

@@ -15,6 +15,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import PreviewCard from "@/components/PreviewCard";
 import { Button } from "@/components/ui/button";
 
+import { Icon } from "@iconify/react";
 import VideoPreview from "@/components/VideoPreview";
 
 export default function Home() {
@@ -32,6 +33,7 @@ export default function Home() {
   // video preview
   const [selectedFile, setSelectedFile] = useState(null);
   const [sourceKey, setSourceKey] = useState(0);
+  const [progress, setProgress] = useState(0);
 
   const previewImages = [
     {
@@ -69,25 +71,32 @@ export default function Home() {
               </PopoverTrigger>
               <PopoverContent className="w-80">
                 <div className="grid gap-4 space-y-2">
-                  <VideoUploader
-                    selectedFile={selectedFile}
-                    setSelectedFile={setSelectedFile}
-                    setSourceKey={setSourceKey}
-                  />
-                  <p>component2</p>
-                  {/* put camera component here */}
+                  <div className="flex flex-row ">
+                    <VideoUploader
+                      selectedFile={selectedFile}
+                      setSelectedFile={setSelectedFile}
+                      setSourceKey={setSourceKey}
+                      disabled={isLiveVisible}
+                      progress={progress}
+                      setProgress={setProgress}
+                    />
+                    <Icon
+                      icon="material-symbols:close"
+                      inline={true}
+                      className="hover:cursor-pointer mt-[0.5em] justify-self-end"
+                      height={24}
+                      onClick={() => setSelectedFile(null)}
+                    />
+                  </div>
+                  <Button disabled={selectedFile} onClick={handleToggleLive}>
+                    {isLiveVisible ? "Turn off Live" : "Turn on Live"}
+                  </Button>
                 </div>
               </PopoverContent>
             </Popover>
             <div id="video" />
             {selectedFile && <VideoPreview sourceKey={sourceKey} selectedFile={selectedFile} />}
-            <div>
-              <button onClick={handleToggleLive}>
-                {isLiveVisible ? "Turn Off Live" : "Turn On Live"}
-              </button>
-
-              {isLiveVisible && <PublishingComponent />}
-            </div>
+            {isLiveVisible && <PublishingComponent />}
           </div>
         </div>
         <ArrowDown />

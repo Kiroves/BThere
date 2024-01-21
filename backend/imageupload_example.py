@@ -23,9 +23,9 @@ default_app = firebase_admin.initialize_app(
 
 db = firestore.client()
 
-user_id = "Sean-20240121-000027"                     # id found from image comparison or list of friends
-user_ref = db.collection("kelvinwong0519@gmail.com") # email received from flask request
-fileName = "C:/Users/jseok627/Pictures/Camera Roll/WIN_20240120_17_51_42_Pro.jpg"
+user_id = "id"                     # id found from image comparison or list of friends
+user_ref = db.collection("email") # email received from flask request
+fileName = "file"
 bucket = storage.bucket()
 blob = bucket.blob(fileName)
 blob.upload_from_filename(fileName)

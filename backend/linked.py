@@ -16,8 +16,8 @@ def change_path_separator(file_path):
 
 temp_images = "temp_images"
 
-videopath = r"C:\Users\jseok627\Downloads\big-buck-bunny_trailer.webm"    # get from either downloaded video
-audiopath = r"C:\Users\jseok627\Downloads\big-buck-bunny_trailer.webm"    #  or received_chunk.webm
+videopath = ""    # get from either downloaded video
+audiopath = ""    #  or received_chunk.webm
 imagepath = capture.capture_frame(videopath, temp_images)
 
 imagepath = change_path_separator(imagepath)
@@ -43,7 +43,7 @@ db = firestore.client()
 
 email = ""
 
-user_id = recognition.match_face(imagepath, email)            # id found from image comparison or list of friends
+user_id = recognition.match_face(imagepath, email)            # id found from image comparison
 user_ref = db.collection(email)                               # email received from flask request
 user_ref.document(user_id).update({"rec": res})
 

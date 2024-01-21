@@ -40,7 +40,7 @@ const AddFriend = ({ onSubmit }) => {
 
     return (
         <div>
-            <div>First time meeting someone? Add their name to BThere! We'll remember their name and face!</div>
+            <div>First time meeting someone? Add their name to BThere and we'll remember their name and face!</div>
             <form onSubmit={handleSubmit}>
                 <label>
                     Name:
@@ -60,7 +60,10 @@ const AddFriend = ({ onSubmit }) => {
                 <br />
                 {selectedFile && <VideoPreview sourceKey={sourceKey} selectedFile={selectedFile} />}
                 <br />
-                <button type="submit">Add Friend</button>
+                <button type="submit" class="bg-yellow-500 hover:bg-yellow-700 text-black font-bold py-2 px-4 rounded">
+                    Add Friend
+                </button>
+
             </form>
         </div>
     );

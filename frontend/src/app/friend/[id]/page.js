@@ -67,7 +67,7 @@ export default function Friends({ params }) {
   return (
     <>
       {dataLoaded ? (
-        <div className="flex flex-row">
+        <div className="flex flex-row justify-center">
           <div className="flex flex-col">
             <Card>
               <CardHeader>
@@ -90,12 +90,12 @@ export default function Friends({ params }) {
             return (
                 <Card>
                   <CardHeader>
-                    <CardTitle>{card.title_summary}</CardTitle>
-                    <CardDescription>{card.overall_mood}</CardDescription>
+                    <CardTitle >{card.title_summary}</CardTitle>
+                  <CardDescription>{card.overall_mood}</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    {card.date}
-                    {card.transcript_summary}
+                  {card.date}</CardContent>
+                <CardContent>{card.transcript_summary}
                   </CardContent>
                 </Card>
             );

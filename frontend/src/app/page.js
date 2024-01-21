@@ -11,53 +11,57 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import Navbar from "@/components/Navbar";
 import ArrowDown from "@/components/ArrowDown";
 export default function Home() {
   return (
-    <main className="px-[10vw]">
-      <div id="video" class="flex justify-center items-center min-h-[100vh]">
-        <Landing/>
-        <VideoUploader />
-      </div>
-      <ArrowDown />
-      <div id="friends">
-        <div className="py-6">
-          <h2 className="text-2xl font-semibold">Your Friends</h2>
-          <Separator className="bg-primary" />
+    <>
+      <Navbar className="sticky" />
+      <main id="home" className="px-[10vw] pt-[5vh]">
+        <Image src="/logo-no-background.svg" width="100" height="100" />
+        <div id="video" class="flex justify-center items-center min-h-[100vh]">
+          <VideoUploader />
         </div>
-        <div className="grid justify-center grid-cols-2 gap-3">
-          <Card>
-            <CardHeader>
-              <CardTitle>Kelvin Wong</CardTitle>
-              <CardDescription>Feeling happy!</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Image src="/calvin.png" width="100" height="100" />
-            </CardContent>
-            <CardFooter></CardFooter>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>Kelvin Wong</CardTitle>
-              <CardDescription>Feeling happy!</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Image src="/calvin.png" width="100" height="100" />
-            </CardContent>
-            <CardFooter></CardFooter>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>Kelvin Wong</CardTitle>
-              <CardDescription>Feeling happy!</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Image src="/calvin.png" width="100" height="100" />
-            </CardContent>
-            <CardFooter></CardFooter>
-          </Card>
+        <ArrowDown />
+        <div id="friends">
+          <div className="py-6">
+            <h2 className="text-2xl font-semibold">Your Friends</h2>
+            <Separator className="bg-primary" />
+          </div>
+          <div className="grid justify-center grid-cols-2 gap-3">
+            <Card>
+              <CardHeader>
+                <CardTitle>Kelvin Wong</CardTitle>
+                <CardDescription>Feeling happy!</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Image src="/calvin.png" width="100" height="100" />
+              </CardContent>
+              <CardFooter></CardFooter>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Kelvin Wong</CardTitle>
+                <CardDescription>Feeling happy!</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Image src="/calvin.png" width="100" height="100" />
+              </CardContent>
+              <CardFooter></CardFooter>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Kelvin Wong</CardTitle>
+                <CardDescription>Feeling happy!</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Image src="/calvin.png" width="100" height="100" />
+              </CardContent>
+              <CardFooter></CardFooter>
+            </Card>
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </>
   );
 }

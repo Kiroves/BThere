@@ -15,18 +15,25 @@ import Navbar from "@/components/Navbar";
 import ArrowDown from "@/components/ArrowDown";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "./firebase";
+import TitleLogo from "../../public/png/logo-no-background.png";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 export default function Home() {
-  const hangleGoogle = async (e) =>  {
-    const provider = new GoogleAuthProvider()
-    return signInWithPopup(auth,provider)
-  }
+  const handleGoogle = async (e) => {
+    const provider = new GoogleAuthProvider();
+    return signInWithPopup(auth, provider);
+  };
   return (
     <>
       <Navbar className="sticky" />
-      <main id="home" className="px-[10vw] pt-[5vh]">
-        <Image src="/logo-no-background.svg" width="100" height="100" />
-        <div id="video" class="flex justify-center items-center min-h-[100vh]">
-          <VideoUploader />
+      <main className="px-[10vw] pt-[5vh]">
+        <div id="home" className="flex flex-col justify-center items-center min-h-[100vh]">
+          <AspectRatio id="logo" ratio={1500 / 500} className="flex justify-center object-cover">
+            <Image src={TitleLogo} fill={true} alt="Title Logo" placeholder="blur" />
+          </AspectRatio>
+          <div id="video" className="flex justify-center items-center">
+            <button onClick={handleGoogle}>Sign in With Google</button>
+            <VideoUploader />
+          </div>
         </div>
         <ArrowDown />
         <div id="friends">

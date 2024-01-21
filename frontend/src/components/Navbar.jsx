@@ -15,10 +15,19 @@ import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
 
-export default function Navbar() {
+export default function Navbar({ setToken, setUser }) {
   const handleGoogle = async (e) => {
     const provider = new GoogleAuthProvider();
-    return signInWithPopup(auth, provider);
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      const token = credential.accessToken;
+      window.localStorage.setItem("token", token);
+      setToken(token);
+      setUser(result.user);
+    } catch (error) {
+      console.log(error.code, error.message);
+    }
   };
   return (
     <>

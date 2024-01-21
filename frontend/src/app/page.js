@@ -27,20 +27,19 @@ export default function Home() {
   const [user, setUser] = useState("");
   const [email, setEmail] = useState("");
 
-  // update email cookie
-  useEffect(() => {
-    window.localStorage.setItem("email", email);
-  }, [email]);
-
   // update token state from cookie on browser start
   useEffect(() => {
     let cookieToken = window.localStorage.getItem("token");
     if (cookieToken) {
       setToken(cookieToken);
     }
-  }, []);
 
-  console.log(token);
+    let cookieEmail = window.localStorage.getItem("email");
+    console.log(cookieEmail);
+    if (cookieEmail) {
+      setEmail(cookieEmail);
+    }
+  }, []);
 
   // video preview
   const [selectedFile, setSelectedFile] = useState(null);
@@ -97,7 +96,7 @@ export default function Home() {
                 <div id="video" />
                 {selectedFile && <VideoPreview sourceKey={sourceKey} selectedFile={selectedFile} />}
                 {isLiveVisible && <PublishingComponent />}
-                <AddFriend />
+                <AddFriend selectedFile={selectedFile} setProgress={setProgress} />
               </div>
             </div>
             <ArrowDown />
@@ -113,10 +112,10 @@ export default function Home() {
           </>
         ) : (
           <>
-            <div class="mb-3 text-2xl">
+            <div className="mb-3 text-2xl">
               <p>Please sign in to access this content.</p>
             </div>
-            <div class="space-y-12">
+            <div className="space-y-12">
               <YSkel />
               <YSkel />
               <YSkel />

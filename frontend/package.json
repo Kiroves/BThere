@@ -11,7 +11,9 @@
   "dependencies": {
     "-": "^0.0.1",
     "@antmedia/webrtc_adaptor": "^2.6.3-SNAPSHOT-2023-Jul-11-07-23",
+    "@hookform/resolvers": "^3.3.4",
     "@radix-ui/react-aspect-ratio": "^1.0.3",
+    "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-navigation-menu": "^1.1.4",
     "@radix-ui/react-popover": "^1.0.7",
     "@radix-ui/react-separator": "^1.0.3",
@@ -26,9 +28,11 @@
     "react": "^18",
     "react-bootstrap": "^2.10.0",
     "react-dom": "^18",
+    "react-hook-form": "^7.49.3",
     "socket.io-client": "^4.7.4",
     "tailwind-merge": "^2.2.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@iconify/react": "^4.1.1",

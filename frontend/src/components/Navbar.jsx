@@ -25,8 +25,8 @@ export default function Navbar({ setToken, setUser, setEmail, token }) {
       const credential = GoogleAuthProvider.credentialFromResult(result);
       const token = credential.accessToken;
       window.localStorage.setItem("token", token);
+      window.localStorage.setItem("email", result.user.email);
       setToken(token);
-      console.log(result);
       setUser(result.user.displayName);
       setEmail(result.user.email);
     } catch (error) {}

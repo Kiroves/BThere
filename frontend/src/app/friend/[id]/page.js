@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { getEmail, setStateEmail } from "@/app/page";// email is user's email
+import { getEmail, setStateEmail } from "@/app/page"; // email is user's email
 import { getDownloadURL, getStorage, ref } from "firebase/storage";
 // ... (imports)
 
@@ -43,7 +43,6 @@ export default function Friends({ params }) {
           return {
             date: event.date,
             overall_mood: event.overall_mood,
-            title_summary: event.title_summary, // url
             transcript_summary: event.transcript_summary,
           };
         });
@@ -79,31 +78,24 @@ export default function Friends({ params }) {
             </Card>
           </div>
         </div>
-
-        
       ) : (
         <p>Loading...</p>
       )}
       {dataLoaded ? (
         <>
-        {cards.map((card, idx) => {
+          {cards.map((card, idx) => {
             return (
-                <Card>
-                  <CardHeader>
-                    <CardTitle >{card.title_summary}</CardTitle>
+              <Card>
+                <CardHeader>
+                  <CardTitle>{card.title_summary}</CardTitle>
                   <CardDescription>{card.overall_mood}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                  {card.date}</CardContent>
-                <CardContent>{card.transcript_summary}
-                  </CardContent>
-                </Card>
+                </CardHeader>
+                <CardContent>{card.date}</CardContent>
+                <CardContent>{card.transcript_summary}</CardContent>
+              </Card>
             );
-          })
-        }
+          })}
         </>
-
-
       ) : (
         <p>Loading...</p>
       )}

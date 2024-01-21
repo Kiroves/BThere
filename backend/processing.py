@@ -83,15 +83,18 @@ def post_process(video_filename: str, email: str, db: firestore.client, match_fa
     if match_face:
         friend_id = recognition.match_face(image_path, email)
     
+    print("friend_id: ", friend_id)
+    
     # update database
     user_ref = db.collection(email)
     user_ref.document(friend_id).update({"rec": rec})
     user_ref.document(friend_id).update({"last_update": int(time.time())})
-    bucket = storage.bucket()
-    blob = bucket.blob(image_path)
-    blob.upload_from_filename(image_path)
-    user_ref.document(friend_id).update({"photo": blob.public_url})
-    blob.make_public()
+    if not match_face:
+        bucket = storage.bucket()
+        blob = bucket.blob(image_path)
+        blob.upload_from_filename(image_path)
+        user_ref.document(friend_id).update({"photo": blob.public_url})
+        blob.make_public()
     
     # update event
     events_ref = user_ref.document(friend_id).collection("events")

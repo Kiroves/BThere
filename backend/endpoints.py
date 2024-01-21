@@ -65,13 +65,25 @@ def hello_world():
     return flask.jsonify({"success": True})
 
 
+@app.route("/add_video", methods=["POST"])
+def add_video():
+    video_url = flask.request.args.get("video")
+    if video_url:
+        # download video
+        print("video url: ", video_url)
+        bucket = storage.bucket()
+        blob = bucket.blob(video_url)
+        file_name = "video-" + time.strftime("%Y%m%d-%H%M%S") + ".webm"
+        blob.download_to_filename(file_name)
+        print("downloaded", file_name)
+        post_process(file_name, flask.request.args.get("email"), db, True, None)
+    return flask.jsonify({"success": True})
+
+
 @app.route("/add_new_friend", methods=["POST"])
 def add_new_friend():
     if (flask.request.args.get("name") == ""):
-        video_url = flask.request.args.get("video")
-        print("downloaded")
-        post_process(video_url, flask.request.args.get("email"), db, True, None)
-        return flask.jsonify({"success": True})
+        return flask.jsonify({"success": False, "error": "name cannot be empty"})
     user_ref = db.collection(flask.request.args.get("email"))
     user_id = str(flask.request.args.get("name")) + "-" + time.strftime("%Y%m%d-%H%M%S") # generate random id
     user_data = {}

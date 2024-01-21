@@ -23,17 +23,19 @@ default_app = firebase_admin.initialize_app(cred_obj)
 db = firestore.client()
 
 
+@app.route("/api/hello_world", methods=["GET", "OPTIONS"])
+def hello_world():
+    return flask.jsonify({"success": True})
+
 @app.route("/add_new_friend", methods=["POST"])
 def add_new_friend():
-    rcv_data = flask.request.get_json()
-    user_ref = db.collection(rcv_data["user"])
-    user_id = (
-        str(rcv_data["name"]) + "-" + time.strftime("%Y%m%d-%H%M%S")
-    )  # generate random id
+    print(flask.request.args.get("email"))
+    user_ref = db.collection(flask.request.args.get("email"))
+    user_id = str(flask.request.args.get("name")) + "-" + time.strftime("%Y%m%d-%H%M%S")# generate random id
     user_data = {}
-    user_data["id"] = id
-    user_data["name"] = rcv_data["name"]
-    user_data["photo"] = None  # TODO: set from API
+    user_data["id"] = user_id
+    user_data["name"] = flask.request.args.get('name')
+    user_data["photo"] = "bthere-fb381.appspot.com/test.jpg"
     user_data["rec"] = None  # TODO: set from API
     user_data["last_update"] = time.time()
     user_ref.document(id).set(user_data)
@@ -51,16 +53,14 @@ def add_new_friend():
 
 @app.route("/delete_friend", methods=["POST"])
 def delete_friend():
-    rcv_data = flask.request.get_json()
-    ref = db.collection(rcv_data["user"])
-    ref.document(rcv_data["id"]).delete()
+    ref = db.collection(flask.request.args.get("email"))
+    ref.document(db.collection(flask.request.args.get("id"))).delete()
     return flask.jsonify({"success": True})
 
 
 @app.route("/get_all_friends", methods=["GET"])
 def get_all_friends():
-    rcv_data = flask.request.get_json()
-    ref = db.collection(rcv_data["user"])
+    ref = db.collection(flask.request.args.get("email"))
     friends = []
     for doc in ref.stream():
         friends.append(doc.to_dict())
@@ -70,10 +70,12 @@ def get_all_friends():
 
 @app.route("/get_friend_info", methods=["GET"])
 def get_friend_info():
-    rcv_data = flask.request.get_json()
-    ref = db.collection(rcv_data["user"])
-    doc = ref.document(rcv_data["id"]).get()
-    return flask.jsonify({"success": True, "friend": doc.to_dict()})
+    ref = db.collection(flask.request.args.get("email"))
+    user_doc = ref.document(db.collection(flask.request.args.get("id"))).get()
+    events = []
+    for event_doc in ref.document(db.collection(flask.request.args.get("id"))).collection("events").stream():
+        events.append(event_doc.to_dict())
+    return flask.jsonify({'success': True, 'friend': user_doc.to_dict(), 'events': events})
 
 
 @socketio.on("connect")
@@ -157,4 +159,4 @@ def get_video_interval():
 
 
 if __name__ == "__main__":
-    socketio.run(app, debug=True)
+    socketio.run(app, debug=True, host='0.0.0.0')

@@ -23,7 +23,7 @@ default_app = firebase_admin.initialize_app(cred_obj)
 db = firestore.client()
 
 
-@app.route("/api/hello_world", methods=["GET", "OPTIONS"])
+@app.route("/api/hello_world", methods=["GET"])
 def hello_world():
     return flask.jsonify({"success": True})
 
@@ -35,18 +35,18 @@ def add_new_friend():
     user_data = {}
     user_data["id"] = user_id
     user_data["name"] = flask.request.args.get('name')
-    user_data["photo"] = "test.jpg" # TODO: set from API
-    user_data["rec"] = None  # TODO: set from API
+    user_data["photo"] = "test.jpg"                             # TODO: set from API
+    user_data["rec"] = "reccomendation here"                    # TODO: set from API
     user_data["last_update"] = int(time.time())
     user_ref.document(user_id).set(user_data)
     # add events
     events_ref = user_ref.document(user_id).collection("events")
     event_id = "event " + time.strftime("%Y%m%d-%H%M%S") # generate random id
     event_data = {}
-    event_data["title_summary"] = None  # TODO
-    event_data["transcript_summery"] = None  # TODO
+    event_data["title_summary"] = "title summary"               # TODO
+    event_data["transcript_summery"] = "transcript summary"     # TODO
     event_data["date"] = int(time.time())
-    event_data["overall_mood"] = None  # TODO
+    event_data["overall_mood"] = "overall mood"                 # TODO
     events_ref.document(event_id).set(event_data)
     return flask.jsonify({"success": True})
 

@@ -9,7 +9,7 @@ const PublishingComponent = () => {
     const mediaRecorderRef = useRef(null);
     const recordedChunksRef = useRef([]);
     const videoChunkInterval = 10000; // 10 seconds
-    const socketIoUrl = 'http://localhost:3001'; // Replace with your Socket.IO server URL
+    const socketIoUrl = 'http://127.0.0.1:5000/get_video_interval'; // Replace with your Socket.IO server URL
 
     const socketRef = useRef(null);
 

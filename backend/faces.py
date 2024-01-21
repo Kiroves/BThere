@@ -56,5 +56,4 @@ def detect_faces(content) -> str:
     surprise = likelihood_name[the_face.surprise_likelihood]
     sorrow = likelihood_name[the_face.sorrow_likelihood]
     res = "anger: {}, joy: {}, surprise: {}, sorrow: {}".format(anger, joy, surprise, sorrow)
-    print(res)
     return res

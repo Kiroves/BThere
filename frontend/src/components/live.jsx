@@ -8,7 +8,7 @@ const PublishingComponent = () => {
   const mediaRecorderRef = useRef(null);
   const recordedChunksRef = useRef([]);
   let intervalId = null;
-  const videoChunkInterval = 3000; // 10 seconds
+  const videoChunkInterval = 5000; // 5 seconds
   const socketIoUrl = process.env.NEXT_PUBLIC_API_URL; // Replace with your Socket.IO server URL
 
   const socketRef = useRef(null);

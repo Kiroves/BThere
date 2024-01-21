@@ -4,7 +4,6 @@ import random
 import json
 from dotenv import load_dotenv
 import flask
-# from PIL import Image
 import firebase_admin
 from firebase_admin import firestore, storage
 from flask import Flask
@@ -81,19 +80,40 @@ def get_all_friends():
     return flask.jsonify({"success": True, "friends": friends})
 
 
+# TODO: change to /friend/<id>
 @app.route("/get_friend_info", methods=["GET"])
 def get_friend_info():
     ref = db.collection(flask.request.args.get("email"))
-    user_doc = ref.document(db.collection(flask.request.args.get("id"))).get()
+    user_doc = ref.document(flask.request.args.get("id"))
     events = []
-    for event_doc in ref.document(db.collection(flask.request.args.get("id"))).collection("events").stream():
+    for event_doc in ref.document(flask.request.args.get("id")).collection("events").stream():
         events.append(event_doc.to_dict())
-    return flask.jsonify({'success': True, 'friend': user_doc.to_dict(), 'events': events})
+    return flask.jsonify({'success': True, 'friend': user_doc.get().to_dict(), 'events': events})
 
 
 @socketio.on("connect")
 def handle_connect():
     print("Client connected")
+    start()
+
+def start():
+    try:
+        global video_filename
+
+        # Perform any setup or initialization here
+        print("Socket connection established. Performing setup...")
+
+        # Generate a unique filename for the temporary compiled video
+        video_filename = f"compiled_video_{random.randint(1000, 9999)}.webm"
+        with open(video_filename, "wb") as f:
+            f.write(b"")  # Create the file
+
+        # Clear the global variable storing video chunks
+        video_chunks.clear()
+
+    except Exception as e:
+        print(f"Error during setup: {e}")
+        end()
 
 
 @socketio.on("disconnect")
@@ -103,104 +123,14 @@ def handle_disconnect():
 
 def end():
     try:
-        global final_compiled_video
-
         # Perform any cleanup or finalization here
         print("Socket connection terminated. Performing cleanup...")
-
-        # Store the final compiled video in a variable
-        final_compiled_video = b''.join(video_chunks)
-
-        # Example: Save the final compiled video with a unique filename
-        final_video_filename = "final_compiled_video.webm"
-        with open(final_video_filename, "wb") as f:
-            f.write(final_compiled_video)
-
-        print(f"Final compiled video saved: {final_video_filename}")
-
-        # Clear the global variable storing video chunks
-        video_chunks.clear()
-
-        # Optionally, delete the temporary compiled video file
-        if os.path.exists(video_filename):
-            os.remove(video_filename)
-            print(f"Temporary compiled video file deleted: {video_filename}")
+        print(f"Final compiled video saved: {video_filename}")
 
     except Exception as e:
         print(f"Error during cleanup: {e}")
-@socketio.on("videoChunk")
-def handle_video_chunk(data):
-    try:
-        # Process the received video chunk (you can replace this with your logic)
-        print(f"Received video chunk with size: {len(data)} bytes")
-
-        # Your logic to turn the blob into video/audio, merge with previous, and send to GPT
-        process_video_chunk(data)
-
-    except Exception as e:
-        print(f"Error processing video chunk: {e}")
 
 
-def process_video_chunk(blob):
-    # TODO: Add your logic to process the video chunk
-    # Here, you can access the binary blob directly and perform necessary operations
-    # For example, you can save it to a file, process it, etc.
-    with open("received_chunk.webm", "wb") as f:
-        f.write(blob)
-
-
-@socketio.on("connect")
-def handle_connect():
-    print("Client connected")
-
-
-@socketio.on("disconnect")
-def handle_disconnect():
-    print("Client disconnected")
-
-
-@socketio.on("videoChunk")
-def handle_video_chunk(data):
-    try:
-        # Process the received video chunk (you can replace this with your logic)
-        print(f"Received video chunk with size: {len(data)} bytes")
-
-        # Your logic to turn the blob into video/audio, merge with previous, and send to GPT
-        process_video_chunk(data)
-
-    except Exception as e:
-        print(f"Error processing video chunk: {e}")
-
-
-def process_video_chunk(blob):
-    # TODO: Add your logic to process the video chunk
-    # Here, you can access the binary blob directly and perform necessary operations
-    # For example, you can save it to a file, process it, etc.
-    with open("received_chunk.webm", "wb") as f:
-        f.write(blob)
-
-    # After processing, you can send the result to GPT or perform any other actions
-
-def handle_video_chunk(data):
-    try:
-        global video_filename
-
-        # Process the received video chunk
-        print(f"Received video chunk with size: {len(data)} bytes")
-
-        # Append the chunk to the global list
-        video_chunks.append(data)
-
-        if not video_filename:
-            # Start a new video recording
-            video_filename = f"compiled_video_{time.strftime('%Y%m%d-%H%M%S')}.webm"
-
-        # Save the compiled video
-        with open(video_filename, "ab") as f:
-            f.write(data)
-
-    except Exception as e:
-        print(f"Error processing video chunk: {e}")
 @app.route("/get_video_interval", methods=["POST"])
 def get_video_interval():
     try:
@@ -209,12 +139,22 @@ def get_video_interval():
 
         # Call the socketio event to process the video chunk
         socketio.emit("videoChunk", blob)
-        print("working")
         return flask.jsonify({"success": True})
 
     except Exception as e:
         print(f"Error handling video chunk: {e}")
         return flask.jsonify({"success": False, "error": str(e)})
+
+
+@socketio.on("videoChunk")
+def handle_video_chunk(data):
+    try:
+        print(f"Received video chunk with size: {len(data)} bytes")
+        with open(video_filename, "ab") as f:
+            f.write(data)
+
+    except Exception as e:
+        print(f"Error processing video chunk: {e}")
 
 
 if __name__ == "__main__":

@@ -4,19 +4,15 @@ import { useEffect, useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import VideoUploader from "@/components/VideoUploader";
 
-import exampleImage from "../../public/calvin.png";
-
 import PublishingComponent from "@/components/live";
 import Navbar from "@/components/Navbar";
 import ArrowDown from "@/components/ArrowDown";
 import TitleLogo from "../../public/png/logo-no-background.png";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import PreviewCard from "@/components/PreviewCard";
 import { Button } from "@/components/ui/button";
 
-import { Icon } from "@iconify/react";
 import VideoPreview from "@/components/VideoPreview";
+import Cards from "@/components/Cards";
 
 export default function Home() {
   const [isLiveVisible, setLiveVisible] = useState(false);
@@ -29,55 +25,11 @@ export default function Home() {
   const [user, setUser] = useState("");
   const [email, setEmail] = useState("");
 
-  console.log(user, token);
-
   // video preview
   const [selectedFile, setSelectedFile] = useState(null);
   const [sourceKey, setSourceKey] = useState(0);
   const [progress, setProgress] = useState(0);
 
-  // friends
-  const [cards, setCards] = useState([]);
-
-  useEffect(() => {
-    const response = fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/hello_world`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-  });
-
-  useEffect(() => {
-    async function getAllFriends() {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/get_all_friends?email=${email}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      const json = await response.json();
-      console.log(json);
-      const friends = json.friends;
-      setCards(
-        friends.map((friend) => {
-          return {
-            name: friend.name,
-            description: friend.rec,
-            image: friend.photo, // url
-          };
-        })
-      );
-    }
-    if (token) {
-      getAllFriends();
-    }
-  }, [token]);
   return (
     <>
       <Navbar className="sticky" setToken={setToken} setUser={setUser} setEmail={setEmail} />
@@ -118,16 +70,7 @@ export default function Home() {
             <Separator className="bg-primary" />
           </div>
           <div className="grid justify-center grid-cols-2 gap-3">
-            {cards.map((previewImages, idx) => {
-              return (
-                <PreviewCard
-                  name={previewImages.name}
-                  description={previewImages.description}
-                  image={previewImages.image}
-                  key={idx}
-                />
-              );
-            })}
+            <Cards token={token} email={email} />
           </div>
         </div>
       </main>

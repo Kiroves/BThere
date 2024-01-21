@@ -5,6 +5,10 @@ const PublishingComponent = () => {
     const [websocketConnected, setWebsocketConnected] = useState(false);
     const localVideoRef = useRef(null);
     const peerConnectionRef = useRef(null);
+    const mediaRecorderRef = useRef(null);
+    const recordedChunksRef = useRef([]);
+    const videoChunkInterval = 10000; // 10 seconds
+    const backendApiUrl = 'YOUR_BACKEND_API_URL'; // Replace with your backend API URL
 
     const handlePublish = async () => {
         try {
@@ -12,24 +16,61 @@ const PublishingComponent = () => {
             localVideoRef.current.srcObject = stream;
             peerConnectionRef.current = createPeerConnection();
             stream.getTracks().forEach(track => peerConnectionRef.current.addTrack(track, stream));
+
+            mediaRecorderRef.current = new MediaRecorder(stream);
+            mediaRecorderRef.current.ondataavailable = handleDataAvailable;
+            mediaRecorderRef.current.onstop = handleRecordingStopped;
+
             setPublishing(true);
+            mediaRecorderRef.current.start();
+            setTimeout(() => {
+                mediaRecorderRef.current.stop();
+            }, videoChunkInterval);
         } catch (error) {
             console.error('Error accessing media devices:', error);
         }
     };
 
-    const handleStopPublishing = () => {
-        const stream = localVideoRef.current.srcObject;
-        if (stream) {
-            stream.getTracks().forEach(track => track.stop());
-            localVideoRef.current.srcObject = null;
-        }
+    const handleRecordingStopped = () => {
+        const recordedBlob = new Blob(recordedChunksRef.current, { type: 'video/webm' });
 
-        if (peerConnectionRef.current) {
-            peerConnectionRef.current.close();
-        }
+        // Send the recorded data to your backend using an HTTP request
+        sendRecordingToBackend(recordedBlob);
 
-        setPublishing(false);
+        // Clear the recorded chunks for the next recording
+        recordedChunksRef.current = [];
+
+        // Start a new recording after 10 seconds
+        setTimeout(() => {
+            mediaRecorderRef.current.start();
+            setTimeout(() => {
+                mediaRecorderRef.current.stop();
+            }, videoChunkInterval);
+        }, 10000);
+    };
+
+    const handleDataAvailable = (event) => {
+        if (event.data.size > 0) {
+            recordedChunksRef.current.push(event.data);
+        }
+    };
+
+    const sendRecordingToBackend = (blob) => {
+        const formData = new FormData();
+        formData.append('video', blob);
+
+        fetch(backendApiUrl, {
+            method: 'POST',
+            body: formData,
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Handle the response from the backend if needed
+                console.log('Backend response:', data);
+            })
+            .catch(error => {
+                console.error('Error sending recording to backend:', error);
+            });
     };
 
     const createPeerConnection = () => {
@@ -71,7 +112,7 @@ const PublishingComponent = () => {
                     Start Publishing
                 </button>
             ) : (
-                <button onClick={handleStopPublishing}>Stop Publishing</button>
+                <button onClick={() => mediaRecorderRef.current.stop()}>Stop Publishing</button>
             )}
         </div>
     );

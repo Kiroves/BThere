@@ -18,7 +18,6 @@ import { signOut } from "firebase/auth";
 import { useState } from "react";
 
 export default function Navbar({ setToken, setUser, setEmail, isAuthenticated, onSignIn, onSignOut }) {
-  const storedIdToken = localStorage.getItem('firebaseIdToken');
   const handleGoogle = async (e) => {
       const provider = new GoogleAuthProvider();
       try {

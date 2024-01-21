@@ -17,3 +17,4 @@ with sr.AudioFile(AUDIO_FILE) as source:
         audio = r.record(source)  # read the entire audio file                  
 
         print("Transcription: " + r.recognize_google(audio))
+        result = r.recognize_google(audio)

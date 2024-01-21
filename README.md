@@ -42,4 +42,4 @@ BThere involves a multi-faceted approach, incorporating various technologies and
 
 ## Try it out
 
-To experience the power of BThere,cd into backend and run ```python ./endpoints.py``` cd into frontend and install dependencies using ```npm i```. then use ```npm run dev``` to run the frontend on localhost:3000/. Start building stronger connections with your friends today!
+To experience the power of BThere, cd into backend and run ```python ./endpoints.py```. Then cd into frontend and install dependencies using ```npm i```. Then use ```npm run dev``` to run the frontend on localhost:3000/. Start building stronger connections with your friends today!

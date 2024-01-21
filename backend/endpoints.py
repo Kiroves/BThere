@@ -102,7 +102,33 @@ def handle_disconnect():
     print("Client disconnected")
     end()
 
+def end():
+    try:
+        global final_compiled_video
 
+        # Perform any cleanup or finalization here
+        print("Socket connection terminated. Performing cleanup...")
+
+        # Store the final compiled video in a variable
+        final_compiled_video = b''.join(video_chunks)
+
+        # Example: Save the final compiled video with a unique filename
+        final_video_filename = f"final_compiled_video_{time.strftime('%Y%m%d-%H%M%S')}.webm"
+        with open(final_video_filename, "wb") as f:
+            f.write(final_compiled_video)
+
+        print(f"Final compiled video saved: {final_video_filename}")
+
+        # Clear the global variable storing video chunks
+        video_chunks.clear()
+
+        # Optionally, delete the temporary compiled video file
+        if os.path.exists(video_filename):
+            os.remove(video_filename)
+            print(f"Temporary compiled video file deleted: {video_filename}")
+
+    except Exception as e:
+        print(f"Error during cleanup: {e}")
 @socketio.on("videoChunk")
 def handle_video_chunk(data):
     try:

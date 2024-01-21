@@ -1,11 +1,16 @@
 import os
 import time
 import random
+import json
 from dotenv import load_dotenv
 import flask
 import firebase_admin
 from firebase_admin import firestore
+from flask import Flask, render_template
+from flask_socketio import SocketIO
 
+app = Flask(__name__)
+socketio = SocketIO(app, cors_allowed_origins='*')
 load_dotenv()
 
 cred_obj = firebase_admin.credentials.Certificate(os.environ.get('FIREBASE_ADMIN_CREDENTIALS'))
@@ -61,6 +66,76 @@ def get_friend_info():
     ref = db.collection(rcv_data['user'])
     doc = ref.document(rcv_data['id']).get()
     return flask.jsonify({'success': True, 'friend': doc.to_dict()})
+@socketio.on('connect')
+def handle_connect():
+    print('Client connected')
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    print('Client disconnected')
+
+@socketio.on('videoChunk')
+def handle_video_chunk(data):
+    try:
+        # Process the received video chunk (you can replace this with your logic)
+        print(f'Received video chunk with size: {len(data)} bytes')
+
+        # Your logic to turn the blob into video/audio, merge with previous, and send to GPT
+        process_video_chunk(data)
+
+    except Exception as e:
+        print(f'Error processing video chunk: {e}')
+
+def process_video_chunk(blob):
+    # TODO: Add your logic to process the video chunk
+    # Here, you can access the binary blob directly and perform necessary operations
+    # For example, you can save it to a file, process it, etc.
+    with open('received_chunk.webm', 'wb') as f:
+        f.write(blob)
+
+@socketio.on('connect')
+def handle_connect():
+    print('Client connected')
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    print('Client disconnected')
+
+@socketio.on('videoChunk')
+def handle_video_chunk(data):
+    try:
+        # Process the received video chunk (you can replace this with your logic)
+        print(f'Received video chunk with size: {len(data)} bytes')
+
+        # Your logic to turn the blob into video/audio, merge with previous, and send to GPT
+        process_video_chunk(data)
+
+    except Exception as e:
+        print(f'Error processing video chunk: {e}')
+
+def process_video_chunk(blob):
+    # TODO: Add your logic to process the video chunk
+    # Here, you can access the binary blob directly and perform necessary operations
+    # For example, you can save it to a file, process it, etc.
+    with open('received_chunk.webm', 'wb') as f:
+        f.write(blob)
+
+    # After processing, you can send the result to GPT or perform any other actions
+
+@app.route('/get_video_interval', methods=['POST'])
+def get_video_interval():
+    try:
+        # Get the binary data from the POST request
+        blob = request.data
+
+        # Call the socketio event to process the video chunk
+        socketio.emit('videoChunk', blob)
+        print("working")
+        return flask.jsonify({'success': True})
+
+    except Exception as e:
+        print(f'Error handling video chunk: {e}')
+        return flask.jsonify({'success': False, 'error': str(e)})
 
 @app.route('/get_video_interval', methods=['POST'])
 def get_video_interval():
@@ -70,4 +145,4 @@ def get_video_interval():
     # send to GPT
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    socketio.run(app, debug=True)

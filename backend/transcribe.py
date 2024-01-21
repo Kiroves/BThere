@@ -2,8 +2,8 @@ import speech_recognition as sr
 from os import path
 from pydub import AudioSegment
 
-# convert mp3 file to wav 
-filename = "C:/Users/jseok627/Documents/Sound recordings/multiple.m4a"                                          
+# convert audio file to wav 
+filename = ""                                          
 sound = AudioSegment.from_file(filename, format = filename.split(".")[-1])
 sound.export("transcript.wav", format="wav")
 

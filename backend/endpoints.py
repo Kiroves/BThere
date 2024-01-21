@@ -8,8 +8,10 @@ import firebase_admin
 from firebase_admin import firestore
 from flask import Flask, render_template
 from flask_socketio import SocketIO
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 socketio = SocketIO(app, cors_allowed_origins='*')
 load_dotenv()
 

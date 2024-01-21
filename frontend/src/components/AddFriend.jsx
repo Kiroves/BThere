@@ -27,7 +27,7 @@ const AddFriend = ({ selectedFile, setProgress, setRefresh }) => {
     const storage = getStorage();
     const arr = new Uint32Array(10);
     crypto.getRandomValues(arr);
-    const storageRef = ref(storage, `videos/${email}/${friendName}${arr.toString()}`);
+    const storageRef = ref(storage, `videos/${email}/${friendName}${arr[0].toString()}`);
     const metadata = {
       contentType: "video/mp4",
     };
@@ -57,7 +57,11 @@ const AddFriend = ({ selectedFile, setProgress, setRefresh }) => {
                 Authorization: `Bearer ${token}`,
               },
             }
-          ).then(setRefresh((refresh) => !refresh));
+          ).then(
+            setTimeout(() => {
+              setRefresh((refresh) => !refresh);
+            }, 15000)
+          );
         } else {
           const response = fetch(
             `${process.env.NEXT_PUBLIC_API_URL}/add_new_friend?email=${email}&name=${friendName}&video=${uploadTask.snapshot.ref.fullPath}`,
@@ -68,7 +72,11 @@ const AddFriend = ({ selectedFile, setProgress, setRefresh }) => {
                 Authorization: `Bearer ${token}`,
               },
             }
-          ).then(setRefresh((refresh) => !refresh));
+          ).then(
+            setTimeout(() => {
+              setRefresh((refresh) => !refresh);
+            }, 15000)
+          );
         }
       }
     );

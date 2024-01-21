@@ -21,6 +21,7 @@ export default function Cards({ token, email, refresh }) {
 
   useEffect(() => {
     async function getAllFriends() {
+      console.log('getting all friends')
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/get_all_friends?email=${email}`,
         {

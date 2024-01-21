@@ -7,7 +7,7 @@ from firebase_admin import firestore
 load_dotenv()
 print(firebase_admin.__version__)
 
-cred_obj = firebase_admin.credentials.Certificate(os.environ.get('FIREBASE_CREDENTIALS'))
+cred_obj = firebase_admin.credentials.Certificate(os.environ.get('FIREBASE_ADMIN_CREDENTIALS'))
 
 default_app = firebase_admin.initialize_app(cred_obj)
 db = firestore.client()

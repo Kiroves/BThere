@@ -4,10 +4,12 @@ import random
 import json
 from dotenv import load_dotenv
 import flask
+# from PIL import Image
 import firebase_admin
 from firebase_admin import firestore, storage
 from flask import Flask
 from flask_socketio import SocketIO
+from flask import Flask, request
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -19,8 +21,17 @@ cred_obj = firebase_admin.credentials.Certificate(
     os.environ.get("FIREBASE_ADMIN_CREDENTIALS")
 )
 
-default_app = firebase_admin.initialize_app(cred_obj)
+default_app = firebase_admin.initialize_app(
+    cred_obj,
+    {
+        'storageBucket': os.environ.get('FIREBASE_STORAGE_BUCKET')
+    }
+)
 db = firestore.client()
+# bucket = storage.bucket()
+# blob = bucket.blob("test.jpg")
+# blob.upload_from_filename("test.jpg")
+# blob.make_public()
 
 
 @app.route("/api/hello_world", methods=["GET"])

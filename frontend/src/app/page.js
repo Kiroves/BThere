@@ -25,12 +25,13 @@ export default function Home() {
   const [token, setToken] = useState(null);
   const [user, setUser] = useState("");
   const [email, setEmail] = useState("");
-
+  useEffect(() => {
+    window.localStorage.setItem("email", email);
+  }, [email]);
   // video preview
   const [selectedFile, setSelectedFile] = useState(null);
   const [sourceKey, setSourceKey] = useState(0);
   const [progress, setProgress] = useState(0);
-
   return (
     <>
       <Navbar className="sticky" setToken={setToken} setUser={setUser} setEmail={setEmail} toke = {token}/>

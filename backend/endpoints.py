@@ -1,6 +1,7 @@
 import os
 import time
 import random
+import json
 from dotenv import load_dotenv
 import flask
 import firebase_admin
@@ -61,6 +62,14 @@ def get_friend_info():
     ref = db.collection(rcv_data['user'])
     doc = ref.document(rcv_data['id']).get()
     return flask.jsonify({'success': True, 'friend': doc.to_dict()})
+
+@app.route('/get_video_interval', methods=['POST'])
+def get_video_interval():
+    # TODO: get blob
+    # turn into video/audio
+    # merge with previous one
+    # send to GPT
+    blob = json.loads(flask.request.form.get('request', None))  # should work ? idk
 
 if __name__ == '__main__':
     app.run(debug=True)

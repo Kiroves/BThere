@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import VideoUploader from "@/components/VideoUploader";
-
+import YSkel from "@/components/Yskel";
 import PublishingComponent from "@/components/live";
 import Navbar from "@/components/Navbar";
 import ArrowDown from "@/components/ArrowDown";
@@ -33,8 +33,10 @@ export default function Home() {
 
   return (
     <>
-      <Navbar className="sticky" setToken={setToken} setUser={setUser} setEmail={setEmail} />
+      <Navbar className="sticky" setToken={setToken} setUser={setUser} setEmail={setEmail} toke = {token}/>
       <main className="px-[10vw] pt-[5vh]">
+        {token? (
+          <>
         <div id="home" className="flex flex-col items-center min-h-[100vh]">
           <div className="w-3/5">
             <AspectRatio id="logo" ratio={1500 / 500} className="flex justify-center object-cover">
@@ -82,7 +84,20 @@ export default function Home() {
           <div className="grid justify-center grid-cols-2 gap-3">
             <Cards token={token} email={email} />
           </div>
-        </div>
+            </div>
+            </>):(<>
+                        <div class = "mb-3">
+            <p>Please sign in to access this content.</p>
+          </div>
+            <div class="space-y-12">
+              <YSkel />
+              <YSkel />
+              <YSkel />
+              <YSkel />
+              <YSkel />
+
+            </div>
+          </>)}
       </main>
     </>
   );

@@ -15,7 +15,7 @@ import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
 
-export default function Navbar({ setToken, setUser, setEmail }) {
+export default function Navbar({ setToken, setUser, setEmail, toke}) {
   const handleGoogle = async (e) => {
     const provider = new GoogleAuthProvider();
     try {
@@ -28,6 +28,15 @@ export default function Navbar({ setToken, setUser, setEmail }) {
       setUser(result.user.displayName);
       setEmail(result.user.email);
     } catch (error) {}
+  };
+  const handleSignOut = async () => {
+    try {
+      // Call the provided callback from props
+      setToken(null);
+      toke = null;
+    } catch (error) {
+      console.error("Sign out error:", error);
+    }
   };
   return (
     <>
@@ -47,9 +56,16 @@ export default function Navbar({ setToken, setUser, setEmail }) {
           </NavigationMenuItem>
           <div className="flex-grow" />
           <NavigationMenuItem>
-            <Button onClick={handleGoogle} variant="ghost" className="">
-              Sign in with Google
-            </Button>
+            {/* Conditionally render "Sign in with Google" or "Sign out" button */}
+            {toke ? (
+              <Button onClick={handleSignOut} variant="ghost" className="">
+                Sign Out
+              </Button>
+            ) : (
+              <Button onClick={handleGoogle} variant="ghost" className="">
+                Sign in with Google
+              </Button>
+            )}
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>

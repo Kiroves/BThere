@@ -6,6 +6,9 @@ import VideoUploader from "@/components/VideoUploader";
 
 import exampleImage from "../../public/calvin.png";
 
+import { useState } from "react";
+import VideoUploader from "@/components/Video";
+import PublishingComponent from "@/components/live";
 import Navbar from "@/components/Navbar";
 import ArrowDown from "@/components/ArrowDown";
 import TitleLogo from "../../public/png/logo-no-background.png";
@@ -18,6 +21,11 @@ import { Button } from "@/components/ui/button";
 import VideoPreview from "@/components/VideoPreview";
 
 export default function Home() {
+  const [isLiveVisible, setLiveVisible] = useState(false);
+
+  const handleToggleLive = () => {
+    setLiveVisible(!isLiveVisible);
+  };
   // auth
   const [token, setToken] = useState(null);
   const [user, setUser] = useState("");
@@ -76,6 +84,13 @@ export default function Home() {
             </Popover>
             <div id="video" />
             {selectedFile && <VideoPreview sourceKey={sourceKey} selectedFile={selectedFile} />}
+            <div>
+              <button onClick={handleToggleLive}>
+                {isLiveVisible ? 'Turn Off Live' : 'Turn On Live'}
+              </button>
+
+              {isLiveVisible && <PublishingComponent />}
+            </div>
           </div>
         </div>
         <ArrowDown />

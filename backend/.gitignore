@@ -1,4 +1,5 @@
 venv/
 .env
-firebase-key.json
+firebase-admin-config.json
+firebase-config.json
 __pycache__/

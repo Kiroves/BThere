@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "-": "^0.0.1",
+    "@antmedia/webrtc_adaptor": "^2.6.3-SNAPSHOT-2023-Jul-11-07-23",
     "@radix-ui/react-aspect-ratio": "^1.0.3",
     "@radix-ui/react-navigation-menu": "^1.1.4",
     "@radix-ui/react-popover": "^1.0.7",
@@ -23,6 +24,7 @@
     "lucide-react": "^0.312.0",
     "next": "14.1.0",
     "react": "^18",
+    "react-bootstrap": "^2.10.0",
     "react-dom": "^18",
     "tailwind-merge": "^2.2.0",
     "tailwindcss-animate": "^1.0.7"

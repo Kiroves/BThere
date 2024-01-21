@@ -62,5 +62,12 @@ def get_friend_info():
     doc = ref.document(rcv_data['id']).get()
     return flask.jsonify({'success': True, 'friend': doc.to_dict()})
 
+@app.route('/get_video_interval', methods=['POST'])
+def get_video_interval():
+    # TODO: get blob
+    # turn into video/audio
+    # merge with previous one
+    # send to GPT
+
 if __name__ == '__main__':
     app.run(debug=True)

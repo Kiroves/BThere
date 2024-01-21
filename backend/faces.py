@@ -1,11 +1,11 @@
 from google.cloud import vision
 client = vision.ImageAnnotatorClient()
 
-def detect_faces_path(path):
+def detect_faces_path(path) -> str:
     """Detects faces in an image."""
     with open(path, "rb") as image_file:
         content = image_file.read()
-    detect_faces(content)
+    return detect_faces(content)
 
 
 def detect_faces_image(image):
@@ -15,7 +15,7 @@ def detect_faces_image(image):
     # detect_faces(content)
 
 
-def detect_faces(content):
+def detect_faces(content) -> str:
     image = vision.Image(content=content)
     response = client.face_detection(image=image)
     faces = response.face_annotations
@@ -29,22 +29,32 @@ def detect_faces(content):
         "LIKELY",
         "VERY_LIKELY",
     )
-    print("Faces:")
+    if len(faces) == 0:
+        return ""
+
+    the_face = faces[0]
+    area = 0
 
     for face in faces:
-        print(f"anger: {likelihood_name[face.anger_likelihood]}")
-        print(f"joy: {likelihood_name[face.joy_likelihood]}")
-        print(f"surprise: {likelihood_name[face.surprise_likelihood]}")
-        print(f"sorrow: {likelihood_name[face.sorrow_likelihood]}")
+        
 
-        vertices = [
-            f"({vertex.x},{vertex.y})" for vertex in face.bounding_poly.vertices
-        ]
+        vertices = face.bounding_poly.vertices
 
-        print("face bounds: {}\n".format(",".join(vertices)))
+        testarea = (vertices[0].x - vertices[2].x) * (vertices[0].y - vertices[2].y)
+        if testarea > area:
+            area = testarea
+            the_face = face
 
     if response.error.message:
         raise Exception(
             "{}\nFor more info on error messages, check: "
             "https://cloud.google.com/apis/design/errors".format(response.error.message)
         )
+
+    anger = likelihood_name[the_face.anger_likelihood]
+    joy = likelihood_name[the_face.joy_likelihood]
+    surprise = likelihood_name[the_face.surprise_likelihood]
+    sorrow = likelihood_name[the_face.sorrow_likelihood]
+    res = "anger: {}, joy: {}, surprise: {}, sorrow: {}".format(anger, joy, surprise, sorrow)
+    print(res)
+    return res

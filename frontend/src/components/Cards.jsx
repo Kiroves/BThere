@@ -1,7 +1,18 @@
 import { useEffect, useState } from "react";
 import { getDownloadURL, getStorage, ref } from "firebase/storage";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import Link from "next/link";
+import ProfilePlaceholder from "../../public/png/profile_placeholder.jpg";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+
+import Friends from "@/app/friend/[id]/page";
 
 export default function Cards({ token, email }) {
   // friends
@@ -27,11 +38,20 @@ export default function Cards({ token, email }) {
       const storage = getStorage();
 
       const mappedFriends = friends.map(async (friend) => {
+        console.log(friend.photo);
+        if (!friend.photo) {
+          return {
+            name: friend.name,
+            description: friend.rec || "",
+            image: ProfilePlaceholder.src,
+            id: friend.id,
+          };
+        }
         const fbRef = ref(storage, friend.photo);
         const imgURL = await getDownloadURL(fbRef);
         return {
           name: friend.name,
-          description: friend.rec,
+          description: friend.rec || "",
           image: imgURL, // url
           id: friend.id,
         };
@@ -49,18 +69,34 @@ export default function Cards({ token, email }) {
   return (
     <>
       {cards.map((card, idx) => {
+        console.log(card.image);
         return (
-          <Link key={card.id} href={`/friend/${card.id}`}>
-            <Card>
-              <CardHeader>
-                <CardTitle>{card.name}</CardTitle>
-                <CardDescription>{card.description}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <img src={card.image} width="100" height="100" />
-              </CardContent>
-            </Card>
-          </Link>
+          // <Link key={card.id} href={`/friend/${card.id}`}>
+          <Dialog>
+            <DialogTrigger>
+              <Card>
+                <CardHeader>
+                  <CardTitle>{card.name}</CardTitle>
+                  <CardDescription>{card.description}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <img src={card.image} width="100" height="100" />
+                </CardContent>
+              </Card>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>
+                  <div className="pb-2">Conversation History with</div>
+                </DialogTitle>
+                <DialogDescription>
+                  <Friends params={{ id: card.id }} />
+                </DialogDescription>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
+
+          // </Link>
         );
       })}
     </>

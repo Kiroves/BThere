@@ -46,7 +46,7 @@ const AddFriend = ({ selectedFile, setProgress }) => {
       async () => {
         // on success
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/add_new_friend?email=${email}&name=${friendName}&video=${uploadTask.snapshot.ref}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/add_new_friend?email=${email}&name=${friendName}&video=${uploadTask.snapshot.ref.fullPath}`,
           {
             method: "POST",
             headers: {

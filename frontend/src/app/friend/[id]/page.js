@@ -3,7 +3,15 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getEmail, setStateEmail } from "@/app/page"; // email is user's email
 import { getDownloadURL, getStorage, ref } from "firebase/storage";
-// ... (imports)
+
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+
+import YSkel from "@/components/YSkel";
 
 export default function Friends({ params }) {
   const [cards, setCards] = useState([]);
@@ -14,7 +22,7 @@ export default function Friends({ params }) {
   const id = params.id;
   const email = window.localStorage.getItem("email") || "";
   const token = window.localStorage.getItem("token") || "";
-  console.log(email);
+  console.log(cards);
 
   useEffect(() => {
     async function getFriendInfo() {
@@ -63,41 +71,43 @@ export default function Friends({ params }) {
     }
   }, [id, email, token]); // Include dependencies in the dependency array
 
+  console.log(cards);
+
   return (
     <>
       {dataLoaded ? (
-        <div className="flex flex-row justify-center">
-          <div className="flex flex-col">
-            <Card>
-              <CardHeader>
-                <CardTitle>{friend.name}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <img src={imgURL} width="100" height="100" alt="Friend's Photo" />
-              </CardContent>
-            </Card>
+        <div className="grid grid-cols-2 h-full">
+          <div className="flex flex-col justify-center items-center">
+            <div className="text-xl">{friend.name}</div>
+            <img src={imgURL} width="100" height="100" alt="Friend's Photo" />
+          </div>
+          <div className="flex flex-col justify-center items-center">
+            {cards.map((card, idx) => {
+              const date = new Date(card.date * 1000);
+              const dateString = date.toLocaleDateString("en-US", {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              });
+              return (
+                <Accordion type="single" collapsible>
+                  <AccordionItem value={`item-${idx + 1}`}>
+                    <AccordionTrigger>
+                      <div>{dateString}</div>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div>{card.overall_mood}</div>
+                      {card.transcript_summary}
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              );
+            })}
           </div>
         </div>
       ) : (
-        <p>Loading...</p>
-      )}
-      {dataLoaded ? (
-        <>
-          {cards.map((card, idx) => {
-            return (
-              <Card>
-                <CardHeader>
-                  <CardTitle>{card.title_summary}</CardTitle>
-                  <CardDescription>{card.overall_mood}</CardDescription>
-                </CardHeader>
-                <CardContent>{card.date}</CardContent>
-                <CardContent>{card.transcript_summary}</CardContent>
-              </Card>
-            );
-          })}
-        </>
-      ) : (
-        <p>Loading...</p>
+        <YSkel />
       )}
     </>
   );

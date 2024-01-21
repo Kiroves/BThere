@@ -6,15 +6,12 @@ import VideoUploader from "@/components/VideoUploader";
 
 import exampleImage from "../../public/calvin.png";
 
-import { useState } from "react";
-import VideoUploader from "@/components/Video";
 import PublishingComponent from "@/components/live";
 import Navbar from "@/components/Navbar";
 import ArrowDown from "@/components/ArrowDown";
 import TitleLogo from "../../public/png/logo-no-background.png";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { PopoverClose } from "@radix-ui/react-popover";
 import PreviewCard from "@/components/PreviewCard";
 import { Button } from "@/components/ui/button";
 
@@ -86,7 +83,7 @@ export default function Home() {
             {selectedFile && <VideoPreview sourceKey={sourceKey} selectedFile={selectedFile} />}
             <div>
               <button onClick={handleToggleLive}>
-                {isLiveVisible ? 'Turn Off Live' : 'Turn On Live'}
+                {isLiveVisible ? "Turn Off Live" : "Turn On Live"}
               </button>
 
               {isLiveVisible && <PublishingComponent />}

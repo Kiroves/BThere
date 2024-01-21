@@ -1,10 +1,15 @@
 "use client";
 import React, { useState } from "react";
-import { createPortal } from "react-dom";
+import { Icon } from "@iconify/react";
 import { Button } from "@/components/ui/button";
-const VideoUploader = ({ selectedFile, setSelectedFile, setSourceKey }) => {
-  const [progress, setProgress] = useState(0);
-
+const VideoUploader = ({
+  selectedFile,
+  setSelectedFile,
+  setSourceKey,
+  disabled,
+  progress,
+  setProgress,
+}) => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setSelectedFile(file);
@@ -27,19 +32,21 @@ const VideoUploader = ({ selectedFile, setSelectedFile, setSourceKey }) => {
   };
 
   return (
-    <div className="container flex justify-center flex-col">
-      <Button className="hover:cursor pb-1">
-        <input
-          id="file-input"
-          type="file"
-          accept="video/*"
-          className="hidden"
-          onChange={handleFileChange}
-        />
-        <label htmlFor="file-input" className="hover:cursor-pointer">
-          Upload Video
-        </label>
-      </Button>
+    <div className="self-center">
+      <div className="flex flex-row">
+        <Button className="hover:cursor pb-1" disabled={disabled}>
+          <input
+            id="file-input"
+            type="file"
+            accept="video/*"
+            className="hidden"
+            onChange={handleFileChange}
+          />
+          <label htmlFor="file-input" className="hover:cursor-pointer">
+            Upload Video
+          </label>
+        </Button>
+      </div>
 
       {/* progress bar */}
       {selectedFile && progress !== 0 && (

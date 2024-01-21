@@ -12,6 +12,7 @@ from flask import Flask, request
 from flask_cors import CORS
 import google.oauth2.id_token
 from google.auth.transport import requests
+from processing import *
 
 
 video_filename = None
@@ -27,14 +28,23 @@ cred_obj = firebase_admin.credentials.Certificate(
 default_app = firebase_admin.initialize_app(
     cred_obj,
     {
-        'storageBucket': os.environ.get('FIREBASE_STORAGE_BUCKET')
+        'storageBucket': os.environ.get('NEXT_PUBLIC_REACT_APP_FIREBASE_STORAGE_BUCKET')
     }
 )
 db = firestore.client()
+
+# upload file
 # bucket = storage.bucket()
 # blob = bucket.blob("test.jpg")
 # blob.upload_from_filename("test.jpg")
 # blob.make_public()
+
+
+# download file
+# bucket = storage.bucket()
+# blob = bucket.blob("test.jpg")
+# blob.download_to_filename("test_download.jpg")
+
 
 firebase_request_adapter = requests.Request()
 
@@ -54,27 +64,40 @@ def verify_tocken(token):
 def hello_world():
     return flask.jsonify({"success": True})
 
+
 @app.route("/add_new_friend", methods=["POST"])
 def add_new_friend():
-    print(flask.request.args.get("email"))
+    if (flask.request.args.get("name") == ""):
+        return flask.jsonify({"success": False, "error": "name cannot be empty"})
     user_ref = db.collection(flask.request.args.get("email"))
-    user_id = str(flask.request.args.get("name")) + "-" + time.strftime("%Y%m%d-%H%M%S")# generate random id
+    user_id = str(flask.request.args.get("name")) + "-" + time.strftime("%Y%m%d-%H%M%S") # generate random id
     user_data = {}
     user_data["id"] = user_id
     user_data["name"] = flask.request.args.get('name')
-    user_data["photo"] = "test.jpg"                             # TODO: set from API
-    user_data["rec"] = "reccomendation here"                    # TODO: set from API
+    user_data["photo"] = None
+    user_data["rec"] = None
     user_data["last_update"] = int(time.time())
     user_ref.document(user_id).set(user_data)
-    # add events
-    events_ref = user_ref.document(user_id).collection("events")
-    event_id = "event " + time.strftime("%Y%m%d-%H%M%S") # generate random id
-    event_data = {}
-    event_data["title_summary"] = "title summary"               # TODO
-    event_data["transcript_summary"] = "transcript summary"     # TODO
-    event_data["date"] = int(time.time())
-    event_data["overall_mood"] = "overall mood"                 # TODO
-    events_ref.document(event_id).set(event_data)
+    
+    video_url = flask.request.args.get("video")
+    if video_url:
+        # download video
+        print("video url: ", video_url)
+        bucket = storage.bucket()
+        blob = bucket.blob(video_url)
+        file_name = "video-" + time.strftime("%Y%m%d-%H%M%S") + ".webm"
+        blob.download_to_filename(file_name)
+        
+        print("downloaded")
+        post_process(file_name, flask.request.args.get("email"), db, False, user_id)
+    # # add events
+    # events_ref = user_ref.document(user_id).collection("events")
+    # event_id = "event " + time.strftime("%Y%m%d-%H%M%S") # generate random id
+    # event_data = {}
+    # event_data["transcript_summary"] = None
+    # event_data["date"] = None
+    # event_data["overall_mood"] = None
+    # events_ref.document(event_id).set(event_data)
     return flask.jsonify({"success": True})
 
 
@@ -111,6 +134,7 @@ def get_friend_info(id):
 def handle_connect():
     print("Client connected")
     start()
+
 
 def start():
     try:

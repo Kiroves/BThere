@@ -50,7 +50,7 @@ export default function Cards({ token, email }) {
     <>
       {cards.map((card, idx) => {
         return (
-          <Link key={card.id} href={`/friends/${card.id}`} >
+          <Link key={card.id} href={`/friend/${card.id}`} >
             <Card>
               <CardHeader>
                 <CardTitle>{card.name}</CardTitle>

@@ -88,7 +88,7 @@ export default function Cards({ token, email, refresh }) {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <img src={card.image} width="100" height="100" />
+                  <img src={card.image} />
                 </CardContent>
               </Card>
             </DialogTrigger>

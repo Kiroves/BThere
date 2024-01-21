@@ -80,12 +80,12 @@ export default function Friends({ params }) {
   return (
     <>
       {dataLoaded ? (
-        <div className="grid grid-cols-2 h-full">
+        <div className="grid grid-cols-2 gap-3 h-full">
           <div className="flex flex-col justify-center items-center">
             <div className="text-xl">{friend.name}</div>
-            <img src={imgURL} width="100" height="100" alt="Friend's Photo" />
+            <img src={imgURL} alt="Friend's Photo" />
           </div>
-          <div className="flex flex-col justify-center items-center">
+          <div className="pl-4 flex flex-col justify-center items-center">
             {cards.map((card, idx) => {
               const date = new Date(card.date * 1000);
               const dateString = date.toLocaleDateString("en-US", {

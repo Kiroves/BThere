@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import VideoUploader from "@/components/VideoUploader";
-import YSkel from "@/components/Yskel";
+import YSkel from "@/components/YSkel";
 import PublishingComponent from "@/components/live";
 import Navbar from "@/components/Navbar";
 import ArrowDown from "@/components/ArrowDown";
@@ -74,8 +74,12 @@ export default function Home() {
                   />
                 </AspectRatio>
               </div>
+              <div className="pt-4">
+                First time meeting someone? Add their name to BThere and we'll remember their name
+                and face!
+              </div>
               <div id="video-section" className="flex flex-col justify-center items-center">
-                <div className="mt-24 flex flex-row gap-20 mb-4">
+                <div className="pt-4 flex flex-row gap-20 mb-4">
                   <VideoUploader
                     selectedFile={selectedFile}
                     setSelectedFile={setSelectedFile}

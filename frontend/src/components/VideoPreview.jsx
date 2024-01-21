@@ -1,4 +1,8 @@
-export default function VideoPreview({sourceKey, selectedFile}) {
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+
+export default function VideoPreview({ sourceKey, selectedFile }) {
   const handleVideoTouch = () => {
     const video = document.getElementById("video");
     if (video.paused) {
@@ -8,16 +12,25 @@ export default function VideoPreview({sourceKey, selectedFile}) {
     }
   };
 
+  const [isVideoOpen, setIsVideoOpen] = useState(true);
+
   return (
-    <video
-      id="video"
-      key={sourceKey}
-      width="100%"
-      height="auto"
-      controls
-      className="border-2 border-black block mb-4"
-      onTouchStart={handleVideoTouch}>
-      <source src={URL.createObjectURL(selectedFile)} type={selectedFile.type} />
-    </video>
+    <>
+      <Button variant="secondary" className="pb-4" onClick={() => setIsVideoOpen((isVideoOpen) => !isVideoOpen)}>
+        {isVideoOpen ? "Hide Video" : "Show Video"}
+      </Button>
+      {isVideoOpen && (
+        <video
+          id="video"
+          key={sourceKey}
+          width="100%"
+          height="auto"
+          controls
+          className="border-2 border-black block my-4"
+          onTouchStart={handleVideoTouch}>
+          <source src={URL.createObjectURL(selectedFile)} type={selectedFile.type} />
+        </video>
+      )}
+    </>
   );
 }

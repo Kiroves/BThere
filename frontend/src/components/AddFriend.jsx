@@ -47,16 +47,29 @@ const AddFriend = ({ selectedFile, setProgress, setRefresh }) => {
       },
       async () => {
         // on success
-        const response = fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/add_new_friend?email=${email}&name=${friendName}&video=${uploadTask.snapshot.ref.fullPath}`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        ).then(setRefresh((refresh) => !refresh));
+        if (friendName === "") {
+          const response = fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/add_video?email=${email}&video=${uploadTask.snapshot.ref.fullPath}`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          ).then(setRefresh((refresh) => !refresh));
+        } else {
+          const response = fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/add_new_friend?email=${email}&name=${friendName}&video=${uploadTask.snapshot.ref.fullPath}`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          ).then(setRefresh((refresh) => !refresh));
+        }
       }
     );
   }
@@ -79,9 +92,7 @@ const AddFriend = ({ selectedFile, setProgress, setRefresh }) => {
         </div>
         <br />
 
-        <button
-          type="submit"
-          className="bg-primary hover:bg-yellow-700 text-black font-bold py-2 px-4 rounded">
+        <button type="submit" className="bg-primary text-black py-2 px-4 rounded">
           Add Friend
         </button>
       </form>

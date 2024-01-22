@@ -1,4 +1,6 @@
 # BThere - Be there for your friends!
+## Built as part of nwHacks2024 (Community and Connection 🤝 Honourable Mention)
+
 
 ## Inspiration
 

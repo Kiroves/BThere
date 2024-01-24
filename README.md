@@ -1,5 +1,5 @@
 # BThere - Be there for your friends!
-Built as part of nwHacks2024 (Community and Connection 🤝 Runner-up)\
+Built as part of nwHacks2024 (Community and Connection 🤝 Runner-Up)\
 Devpost: https://devpost.com/software/bthere-hobi6k
 
 ## Inspiration
